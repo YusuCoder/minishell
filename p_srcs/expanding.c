@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   expanding.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 13:53:46 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/07/30 15:27:48 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/13 21:50:39 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,56 +84,34 @@ int	expansion_of_first_token(char *token)
 /*
 	this function is responsible for expanding a certain token with ($) within the array
 */
-// void	expand(char	**tokens, char **env)
-// {
-// 	int		i;
-// 	int		x;
-// 	char	*expanded_token;
 
-// 	i = 0;
-// 	while (tokens[i])
-// 	{
-// 		if (expansion_of_first_token(tokens[i]) != -1)
-// 		{
-// 			if (ft_strchr(tokens[i], '$')[1] == '\0' || count_str(ft_strchr(tokens[i], '$')[1]) || is_exeption(ft_strchr(tokens[i], '$')[1]))    //maybe the issue here in this function need to be clarified later with test
-// 			{
-// 				i++;
-// 				continue ;
-// 			}
-// 			x = expansion_of_first_token(tokens[i]);
-// 			expanded_token = dollar_sign(tokens[i], tokens[i] + x + 1, env);
-// 			// free(tokens[i]);
-// 			tokens[i] = expanded_token;
-// 		}
-// 		if (still_dollar_sign_there(tokens[i]))
-// 			continue ;
-// 		i++;
-// 	}
-// }
-
-void expand(char **tokens, char **env, t_command *cmd)
-{
+void expand(char **tokens, char **env, t_data *data) {
     int i = 0;
     int x;
     char *expanded_token;
 
     while (tokens[i]) {
+        // Check if the current token needs expansion
         if (expansion_of_first_token(tokens[i]) != -1) {
-            if (ft_strchr(tokens[i], '$')[1] == '\0' ||
-                count_str(ft_strchr(tokens[i], '$')[1]) ||
-                is_exeption(ft_strchr(tokens[i], '$')[1])) {
+            char *dollar_ptr = ft_strchr(tokens[i], '$');
+            // If no $ found or $ is at the end or a special case, skip
+            if (!dollar_ptr || dollar_ptr[1] == '\0' || count_str(dollar_ptr[1]) || is_exeption(dollar_ptr[1])) {
                 i++;
                 continue;
             }
+            // Get the length of the expansion target
             x = expansion_of_first_token(tokens[i]);
-            expanded_token = dollar_sign(tokens[i], tokens[i] + x + 1, env, cmd);
-            free(tokens[i]);
+            // Expand the token based on the environment variables
+            expanded_token = dollar_sign(tokens[i], tokens[i] + x + 1, env, *(data->exit_code));
+            // Free the old token memory if necessary
+            // free(tokens[i]); // Uncomment if dynamic memory allocation is used
+            // Assign the expanded token back to the tokens array
             tokens[i] = expanded_token;
         }
-        if (still_dollar_sign_there(tokens[i])) {
-            i++;
+        // If there's still a $ sign in the token, continue to process it
+        if (still_dollar_sign_there(tokens[i]))
             continue;
-        }
+
         i++;
     }
 }

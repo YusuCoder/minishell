@@ -1,0 +1,237 @@
+
+#define MAX_ARGS 128
+#define MAX_REDIRS 10
+
+typedef struct command {
+    char *argv[MAX_ARGS];          // Array of arguments for the command (including the command name)
+    int argc;                      // Number of arguments
+
+    int input_fd;                  // File descriptor for input redirection (e.g., stdin), default is STDIN_FILENO
+    int output_fd;                 // File descriptor for output redirection (e.g., stdout), default is STDOUT_FILENO
+    int error_fd;                  // File descriptor for error redirection (e.g., stderr), default is STDERR_FILENO
+
+    int has_heredoc;               // Flag indicating if heredoc is used
+    char *heredoc_delimiter;       // Delimiter string for heredoc
+
+    char *input_file;              // File path for input redirection (if any)
+    char *output_file;             // File path for output redirection (if any)
+    char *error_file;              // File path for error redirection (if any)
+
+    int is_output_append;          // Flag indicating if output redirection is in append mode (e.g., '>>')
+    int is_error_append;           // Flag indicating if error redirection is in append mode (e.g., '2>>')
+
+    int is_background;             // Flag indicating if the command should run in the background (e.g., '&')
+
+    int has_pipe;                  // Flag indicating if the command is part of a pipeline
+    int pipe_in_fd;                // File descriptor for reading from the previous command in a pipeline
+    int pipe_out_fd;               // File descriptor for writing to the next command in a pipeline
+
+} command_t;
+
+Explanation of the Fields
+argv[MAX_ARGS]: This array holds the command and its arguments, similar to how arguments are passed to execve(). For example, if the command is ls -l /home, argv[0] would be "ls", argv[1] would be "-l", and argv[2] would be "/home".
+
+argc: The count of arguments in argv. This helps in managing the arguments within the code.
+
+input_fd: The file descriptor for input redirection. If no input redirection is specified, this would typically be STDIN_FILENO. This could be changed to a file descriptor if the command has input redirection (like < input.txt).
+
+output_fd: The file descriptor for output redirection. If no output redirection is specified, this would typically be STDOUT_FILENO. This could be changed if the command has output redirection (like > output.txt or >> output.txt).
+
+error_fd: The file descriptor for error redirection, with the default being STDERR_FILENO. This field allows for redirection of stderr (e.g., 2> error.txt).
+
+has_heredoc: A flag indicating whether a heredoc (<<) is present. This is used to determine if the command's input should be read from a heredoc.
+
+heredoc_delimiter: The string that marks the end of heredoc input. For example, in cat << EOF, EOF is the delimiter.
+
+input_file, output_file, error_file: Strings holding file paths for input, output, and error redirection, respectively. These are used when setting up redirection before executing the command.
+
+is_output_append: A flag that indicates if the output redirection should be in append mode (i.e., >>). If set to 1, the output is appended to the file instead of overwriting it.
+
+is_error_append: Similar to is_output_append, but for error output (2>>).
+
+is_background: A flag that indicates whether the command should run in the background (e.g., using &). If this flag is set, the shell should not wait for the command to complete.
+
+has_pipe: A flag indicating whether the command is part of a pipeline. This is useful for determining if pipe setup is necessary.
+
+pipe_in_fd: The file descriptor for the read end of the pipe, used to read the output of the previous command in the pipeline.
+
+pipe_out_fd: The file descriptor for the write end of the pipe, used to send output to the next command in the pipeline.
+
+Usage Example in Context
+When a command line like cat << EOF | grep 'text' > output.txt is entered, the command_t structures would be filled as follows:
+
+First Command (cat << EOF):
+
+argv: ["cat", NULL]
+has_heredoc: 1
+heredoc_delimiter: "EOF"
+pipe_out_fd: set to the write end of the pipe
+output_fd: defaults to STDOUT_FILENO (pipe is set up later)
+Second Command (grep 'text' > output.txt):
+
+argv: ["grep", "text", NULL]
+input_fd: set to the read end of the pipe
+output_file: "output.txt"
+is_output_append: 0 (not in append mode)
+output_fd: will be set to the file descriptor for output.txt
+
+
+
+
+/****************************************************************/
+/****************************************************************/
+/****************************************************************/
+
+
+
+
+void execute(char *command_line, char **envp)
+{
+    // Step 1: Parse the command line
+    command_t commands[MAX_COMMANDS]; // Array to hold parsed com mands
+    int num_commands = parse_commands(command_line, commands); // Split by pipes and parse redirections
+
+    int pipe_fd[2];
+    int previous_pipe_fd[2];
+    int exit_code = 0;
+    pid_t pid;
+
+    for (int i = 0; i < num_commands; i++) {
+        command_t *cmd = &commands[i];
+
+        // Step 2: Handle Heredoc
+        if (cmd->has_heredoc) {
+            cmd->input_fd = handle_heredoc(cmd->heredoc_delimiter);
+        }
+
+        // Step 3: Setup pipe if needed
+        if (i < num_commands - 1) {
+            if (pipe(pipe_fd) == -1) {
+                perror("pipe");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        // Step 4: Fork a process for the command
+        pid = fork();
+        if (pid == -1) {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+
+        if (pid == 0) { // Child process
+            // Step 5: Handle Input Redirection
+            if (cmd->input_fd != STDIN_FILENO) {
+                dup2(cmd->input_fd, STDIN_FILENO);
+                close(cmd->input_fd);
+            } else if (i > 0) { // If not the first command, get input from previous pipe
+                dup2(previous_pipe_fd[0], STDIN_FILENO);
+                close(previous_pipe_fd[0]);
+                close(previous_pipe_fd[1]);
+            }
+
+            // Step 6: Handle Output Redirection
+            if (cmd->output_fd != STDOUT_FILENO) {
+                dup2(cmd->output_fd, STDOUT_FILENO);
+                close(cmd->output_fd);
+            } else if (i < num_commands - 1) { // If not the last command, write to current pipe
+                dup2(pipe_fd[1], STDOUT_FILENO);
+                close(pipe_fd[0]);
+                close(pipe_fd[1]);
+            }
+
+            // Step 7: Execute the command
+            if (is_builtin(cmd->argv[0])) {
+                execute_builtin(cmd->argv, &envp, &exit_code);
+                exit(exit_code); // Exit after running builtin in child
+            } else {
+                execve(cmd->argv[0], cmd->argv, envp);
+                perror("execve");
+                exit(127); // Command not found or failed to execute
+            }
+        } else { // Parent process
+            // Step 8: Manage pipes and wait for the child process
+            if (i > 0) {
+                close(previous_pipe_fd[0]);
+                close(previous_pipe_fd[1]);
+            }
+            if (i < num_commands - 1) {
+                previous_pipe_fd[0] = pipe_fd[0];
+                previous_pipe_fd[1] = pipe_fd[1];
+            }
+            waitpid(pid, &exit_code, 0); // Wait for child to finish
+
+            // Convert exit code from child process
+            if (WIFEXITED(exit_code)) {
+                exit_code = WEXITSTATUS(exit_code);
+            }
+        }
+    }
+
+    // Step 9: Cleanup any temporary files used by heredocs
+    cleanup_heredoc_files(commands, num_commands);
+
+    // Return or handle final exit code
+    return exit_code;
+}
+
+// Additional helper functions
+
+int parse_commands(char *command_line, command_t *commands) {
+    // This function parses the command line into individual commands,
+    // handling pipes, redirections, and heredocs.
+    // It returns the number of parsed commands.
+    // Example structure:
+    // command_t {
+    //     char *argv[MAX_ARGS];
+    //     int input_fd;
+    //     int output_fd;
+    //     int has_heredoc;
+    //     char *heredoc_delimiter;
+    //     ...
+    // }
+    return number_of_commands;
+}
+
+int handle_heredoc(char *delimiter)
+{
+    // This function handles the heredoc input.
+    // It returns a file descriptor that should be used for input redirection.
+    int fd = open("/tmp/heredoc_tempfile", O_CREAT | O_WRONLY, 0600);
+    while (true) {
+        char *line = readline("> ");
+        if (strcmp(line, delimiter) == 0) break;
+        write(fd, line, strlen(line));
+        write(fd, "\n", 1);
+    }
+    close(fd);
+    return open("/tmp/heredoc_tempfile", O_RDONLY);
+}
+
+void cleanup_heredoc_files(command_t *commands, int num_commands)
+{
+    // This function cleans up any temporary files created for heredocs.
+    // Typically, it removes the temporary files.
+    for (int i = 0; i < num_commands; i++) {
+        if (commands[i].has_heredoc) {
+            unlink("/tmp/heredoc_tempfile");
+        }
+    }
+}
+
+void execute_builtin(char **argv, char ***envp, int *exit_code) {
+    // Handle execution of builtin commands (e.g., cd, echo, etc.)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

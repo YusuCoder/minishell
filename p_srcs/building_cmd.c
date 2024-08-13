@@ -1,34 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors.c                                           :+:      :+:    :+:   */
+/*   building_cmd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/11 12:49:37 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/13 13:48:10 by ryusupov         ###   ########.fr       */
+/*   Created: 2024/08/13 19:04:47 by ryusupov          #+#    #+#             */
+/*   Updated: 2024/08/13 19:10:01 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+// #include "../includes/minishell.h"
 
-void	free_ptr(void *ptr)
-{
-	if (ptr != NULL)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
-}
-
-void	_free_it(char **p)
-{
-	free(*p);
-	*p = NULL;
-}
-
-void _err_msg(char *msg, char err_code)
-{
-	perror(msg);
-	exit(err_code);
-}
+// int	build_commands(char **tokens, t_command *cmd)
+// {
+// 	expand(tokens, cmd->envp);
+// }

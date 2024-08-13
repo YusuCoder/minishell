@@ -6,33 +6,37 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 19:39:28 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/07/29 21:17:27 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/09 18:55:26 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	execute_unset(char **args, int *exit_code)
+// Function to execute the "unset" command
+void	execute_unset(char **args, char ***env, int *exit_code)
 {
-	int i;
+	int		i;
+	int		j;
 
 	i = 0;
 	if (args[1] == NULL)
+		return ;
+	while (args[++i])
 	{
-		write(2, "unset: not enough arguments\n", 28);
-		*exit_code = 1;
-		return (1);
-	}
-	while (args[i])
-	{
-		if (unsetenv(args[1]) != 0)
+		j = -1;
+		while ((*env)[++j])
 		{
-			perror("unset");
-			*exit_code = 1;
-			return (1);
+			if (ft_strncmp((*env)[j], args[i], strlen(args[i])) == 0)
+			{
+				if (env_var_remove(env, j) != 0)
+				{
+					write(2, "unset: memory allocation error\n", 31);
+					*exit_code = 1;
+					return ;
+				}
+				break ;
+			}
 		}
-		i++;
 	}
 	*exit_code = 0;
-	return (0);
 }

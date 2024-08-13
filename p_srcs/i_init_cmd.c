@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   i_init_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:28:22 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/07/26 13:43:37 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/12 09:25:24 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-/*Gets the string from env SHLVL=1 and iterates untill it reaches '=' then it extracts a substring 'SHELL='
-  after it will convert '1' to integer using atoi then increments it by one then converts it back to string.*/
+// /*Gets the string from env SHLVL=1 and iterates untill it reaches '=' then it extracts a substring 'SHELL='
+//   after it will convert '1' to integer using atoi then increments it by one then converts it back to string.*/
 char	*shlvl_handler(char *str)
 {
 	char	*number;

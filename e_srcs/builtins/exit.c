@@ -6,13 +6,14 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 17:54:56 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/02 11:29:14 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/06 13:29:34 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	is_number(char *arg)
+// Function to check if the character is a number
+int	is_number(char *arg)
 {
 	int	i;
 
@@ -27,7 +28,8 @@ static int	is_number(char *arg)
 	return (1);
 }
 
-static int	args_len(char **args)
+// Function to count the number of arguments
+int	args_len(char **args)
 {
 	int	i;
 
@@ -37,7 +39,8 @@ static int	args_len(char **args)
 	return (i);
 }
 
-int	execute_exit(char **args, int *exit_code)
+// Function to execute the "exit" command
+void	execute_exit(char **args, int *exit_code)
 {
 	printf("exit\n");
 	if (args_len(args) > 1)
@@ -50,7 +53,7 @@ int	execute_exit(char **args, int *exit_code)
 			{
 				write(2, "minishell: exit: too many arguments\n", 37);
 				*exit_code = 1;
-				return (1);
+				return ;
 			}
 		}
 		else

@@ -41,46 +41,8 @@
 // 	return (env);
 // }
 
-int	get_len(char **envp)
-{
-	int	i;
 
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		i++;
-	}
-	return (i);
-}
 
-char	**set_envp(char **envp)
-{
-	int		size;
-	char	**env;
-	int		i;
-
-	size = get_len(envp);
-	env = (char **)malloc((size + 1) * sizeof(char *));
-	if (!env)
-		return (NULL);
-	i = 0;
-	while (i < size)
-	{
-		env[i] = ft_strdup(envp[i]);
-		if (!env[i])
-		{
-			while (i > 0)
-			{
-				free(env[--i]);
-			}
-			free(env);
-			return (NULL);
-		}
-		i++;
-	}
-	env[i] = NULL;
-	return (env);
-}
 
 // int main(void)
 // {
