@@ -102,6 +102,7 @@ typedef struct s_data
 	int			cmd_num;	//number of commands separated with pipe
 	t_cmd		*cmd_list;	//array of commands seperated with pipes
 	int			*exit_code;
+	char		*last_arg;
 }				t_data;
 
 typedef enum s_process
@@ -142,7 +143,7 @@ void 	expand(char **tokens, char **env, t_data *exit_code);
 int		not_in_squote(char *token, int i);
 int		is_exeption(char c);
 int		still_dollar_sign_there(char *token);
-char	*dollar_sign(char *sign, char *token,  char **env, int exit_code);
+char	*dollar_sign(char *sign, char *token,  char **env, t_data *data);
 int		expansion_of_first_token(char *token);
 bool	var_between_quotes(char *str, int i);
 int 	replace_var(char **token_array, char *var_value, int index);

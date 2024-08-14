@@ -82,9 +82,13 @@ int	main(int argc, char **argv, char **envp)
 			}
 			i++;
 		}
-		expand(data.tokens, data.env, &data);
-		create_command_list(data.tokens, &data);
-		execute(&data);
+		i = 0;
+		if (data.tokens != NULL)
+		{
+			expand(data.tokens, data.env, &data);
+			create_command_list(data.tokens, &data);
+			execute(&data);
+		}
 		// if (!t.tokens)
 		// 	return (0);
 	}
