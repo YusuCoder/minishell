@@ -1,38 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export_utils.c                                     :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/16 12:26:05 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:26:07 by tkubanyc         ###   ########.fr       */
+/*   Created: 2024/08/16 12:25:09 by tkubanyc          #+#    #+#             */
+/*   Updated: 2024/08/16 12:26:49 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// Set environment variable
-int	export_update_env(char ***env, const char *name, const char *value,
-	int overwrite)
+void	ft_perror(char *msg1, char *arg, char *msg2)
 {
-	int		i;
-	char	*new_env_var;
-
-	i = env_var_find(*env, name);
-	new_env_var = env_var_create(name, value);
-	if (!new_env_var)
-		return (-1);
-	if (i != -1)
-	{
-		if (overwrite)
-		{
-			free((*env)[i]);
-			(*env)[i] = new_env_var;
-		}
-		else
-			free(new_env_var);
-		return (0);
-	}
-	return (env_var_add(env, new_env_var));
+	write(2, msg1, ft_strlen(msg1));
+	if (arg != NULL)
+		write(2, arg, ft_strlen(arg));
+	if (msg2 != NULL)
+		write(2, msg2, ft_strlen(msg2));
+	write(2, "\n", 1);
 }

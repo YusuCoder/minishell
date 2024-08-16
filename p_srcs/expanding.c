@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 13:53:46 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/16 01:45:39 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/16 20:42:50 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,30 +46,6 @@ int	is_exeption(char c)
 		return (1);
 	return (0);
 }
-
-// int	still_dollar_sign_there(char *token)
-// {
-// 	int	i;
-// 	int	check;
-// 	int	in_single_quote;
-// 	int	in_double_quote;
-
-// 	i = 0;
-// 	check = 0;
-// 	in_single_quote = 0;
-// 	in_double_quote = 0;
-// 	while (token[i])
-// 	{
-// 		if (token[i] == '\'' && !in_double_quote)
-// 			in_single_quote = !in_single_quote;
-// 		else if (token[i] == '"' && !in_single_quote)
-// 			in_double_quote = !in_double_quote;
-// 		if (token[i] == '$' && !in_single_quote)
-// 			check++;
-// 		i++;
-// 	}
-// 	return (check > 0);
-// }
 
 int	still_dollar_sign_there(char *token)
 {
@@ -127,7 +103,6 @@ char	*remove_double_quotes(char *str)
 /*
 	this function is responsible for expanding a certain token with ($) within the array
 */
-
 void	expand(char **tokens, char **env, t_data *data)
 {
 	int		i;

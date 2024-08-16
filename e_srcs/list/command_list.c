@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command_list.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/16 12:17:37 by tkubanyc          #+#    #+#             */
+/*   Updated: 2024/08/16 12:18:26 by tkubanyc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
@@ -66,7 +77,6 @@ void	cmd_list_add_new(t_cmd **head, char **tokens, int len, int index)
 		exit(EXIT_FAILURE);
 	new_cmd->args = cmd_list_set_args(tokens, len, index);
 	new_cmd->args_num = len;
-	// new_cmd->fd[2] = 0;
 	new_cmd->is_heredoc = 0;
 	new_cmd->hrdc_delimeter = NULL;
 	new_cmd->is_redir_input = 0;

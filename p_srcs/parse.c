@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:27:31 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/16 04:08:58 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/16 20:42:20 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,27 +75,6 @@ int quotes_check(char *t)
         return (-1);
     return (0);
 }
-// int quotes_check(const char *t) {
-//     int i = 0;
-//     int s_quote_open = 0;
-//     int d_quote_open = 0;
-
-//     while (t[i]) {
-//         if (t[i] == '\'' && !d_quote_open) {
-//             s_quote_open = !s_quote_open;
-//         }
-//         if (t[i] == '\"' && !s_quote_open) {
-//             d_quote_open = !d_quote_open;
-//         }
-//         i++;
-//     }
-
-//     // If any of the quotes are left open, return error
-//     if (s_quote_open || d_quote_open) {
-//         return -1;
-//     }
-//     return 0;
-// }
 
 int parse(char **t) {
     int i = 0;

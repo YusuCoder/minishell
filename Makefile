@@ -9,8 +9,7 @@ OBJ_PATH	:= ./obj
 P_SRC_PATH	:= ./p_srcs
 E_SRC_PATH	:= ./e_srcs
 MAIN		:= main.c
-SRC_FILES	:= ./p_srcs/i_init_cmd.c \
-				./p_srcs/i_handle_signals.c \
+SRC_FILES	:= ./p_srcs/signals.c\
 				./p_srcs/errors.c \
 				./p_srcs/t_tokenize.c \
 				./p_srcs/t_add_tokens.c \
@@ -23,6 +22,8 @@ SRC_FILES	:= ./p_srcs/i_init_cmd.c \
 				./p_srcs/expanding_1.c \
 				./p_srcs/expanding_2.c \
 				./p_srcs/quote_handling.c \
+				./e_srcs/custom_functions/custom_functions.c \
+				./e_srcs/custom_functions/split_str.c \
 				./e_srcs/list/command_list.c \
 				./e_srcs/list/list_handler.c \
 				./e_srcs/environment/env_set.c \
@@ -30,6 +31,8 @@ SRC_FILES	:= ./p_srcs/i_init_cmd.c \
 				./e_srcs/environment/env_value.c \
 				./e_srcs/custom_functions/custom_functions.c \
 				./e_srcs/environment/env_var.c \
+				./e_srcs/list/command_list.c \
+				./e_srcs/list/list_handler.c \
 				./e_srcs/builtins/builtin_checker.c \
 				./e_srcs/builtins/cd.c \
 				./e_srcs/builtins/echo.c \
@@ -39,11 +42,13 @@ SRC_FILES	:= ./p_srcs/i_init_cmd.c \
 				./e_srcs/builtins/export_utils.c \
 				./e_srcs/builtins/pwd.c \
 				./e_srcs/builtins/unset.c \
-				./e_srcs/execute.c \
+				./e_srcs/cleanup/cleanup.c \
+				./e_srcs/cleanup/error.c \
+				./e_srcs/cleanup/free.c \
 				./e_srcs/execute_utils.c \
-				./e_srcs/cleanup.c \
-				./e_srcs/error.c \
-				./e_srcs/free.c
+				./e_srcs/execute_checker.c \
+				./e_srcs/execute_process.c \
+				./e_srcs/execute.c
 
 OBJS		:= $(patsubst %, $(OBJ_PATH)/%, $(SRC_FILES:.c=.o))
 MAIN_OBJ	:= $(OBJ_PATH)/main.o

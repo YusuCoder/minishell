@@ -17,6 +17,7 @@
 #include<limits.h>
 #include<readline/readline.h>
 #include<readline/history.h>
+#include <sys/wait.h>
 #include<signal.h>
 #include<string.h>
 #include<termios.h>
@@ -68,7 +69,7 @@ typedef struct s_commands
 {
 	char			**tokens;
 	t_ryusupov		**env;
-	uint8_t			exit_code;
+	int			exit_code;
 	int				*pipe;
 	int				cmd_num; //number of commands separated with pipe
 	char			**envp;
@@ -80,7 +81,7 @@ typedef struct s_cmd
 {
 	char		**args;		//array of arguments of each command
 	int			args_num;	//number of arguments of each command
-	int			fd[2];
+	int			pipe_fd[2];
 	int			is_heredoc;		// Flag indicating if heredoc is used
 	char		*hrdc_delimeter;	// Delimiter string for heredoc
 	int			is_redir_input;	// Flag indicating if input redirection
@@ -113,11 +114,12 @@ typedef enum s_process
 }			t_process;
 
 /*----global variable-----*/
-t_command	gl_command; // <------- !!! DON"T FORGET TO CHANGE !!!
+t_data	gl_command; // <------- !!! DON"T FORGET TO CHANGE !!!
 
 /*-----------SIGNALS----------*/
-void	_init_terminal(t_command *cmd, char **envp);
+void	_init_terminal(int exit_code);
 void	_handle_signals(t_process stats);
+void	determine_exit_code(int *exit_code);
 /*--------Error messages---------*/
 void	_err_msg(char *msg, char err_code);
 void	_free_it(char **p);
@@ -178,17 +180,6 @@ int		count_string(char	*token);
 // int		token_count(t_command *cmd, char **tokens, int i, int j);
 // int		build_cmds(char	**tokens, t_command *cmd);
 
-/*-------------------------*/
-/*  Command list handling  */
-/*-------------------------*/
-void	cmd_list_create(char **tokens, t_data *data);
-void	cmd_list_add_new(t_cmd **head, char **tokens, int len, int index);
-char	**cmd_list_set_args(char **tokens, int len, int index);
-int		count_commands(char **tokens);
-int		count_arguments(char **tokens, int index);
-void	list_add_new(t_cmd **head, t_cmd *new);
-t_cmd	*list_get_last(t_cmd *head);
-
 /*------------------------*/
 /*  Environment handling  */
 /*------------------------*/
@@ -211,21 +202,38 @@ void	quicksort(char **arr, int low, int high);
 int		partition(char **arr, int low, int high);
 void	swap(char **a, char **b);
 
+/*-------------------------*/
+/*  Command list handling  */
+/*-------------------------*/
+void	cmd_list_create(char **tokens, t_data *data);
+void	cmd_list_add_new(t_cmd **head, char **tokens, int len, int index);
+char	**cmd_list_set_args(char **tokens, int len, int index);
+int		count_commands(char **tokens);
+int		count_arguments(char **tokens, int index);
+void	list_add_new(t_cmd **head, t_cmd *new);
+t_cmd	*list_get_last(t_cmd *head);
+
 /*-------------*/
 /*  Executing  */
 /*-------------*/
 void	execute(t_data *data);
 void	execute_single_command(t_data *data, t_cmd *cmd);
-void	print_wrong_command(char *arg, int *exit_code);
-void	print_wrong_path(char *arg, int *exit_code);
+void	execute_multiple_commands(t_data *data);
+void	execute_builtin(t_data *data, char **args);
+void	execute_external(t_data *data, t_cmd *cmd);
+void	run_child_process(t_data *data, t_cmd *cmd, int *prev_fd);
+void	run_parent_process(t_cmd *cmd, int *prev_fd);
+int		set_pipe_fd(t_cmd *cmd);
+int		is_accessable(char *cmd_name, char **cmd_path, char **env);
 int		is_builtin_cmd_only(t_data *data);
 int		is_executable(char *cmd_path);
 char	*set_cmd_path(char *str);
+void	print_wrong_command(char *arg, int *exit_code);
+void	print_wrong_path(char *arg, int *exit_code);
 
 /*--------------------*/
 /*  Builtin commands  */
 /*--------------------*/
-void	execute_builtin(t_data *data, char **args);
 int		is_builtin(char *arg);
 int		is_cd(char *arg);
 int		is_pwd(char *arg);
@@ -268,7 +276,7 @@ int		execute_unset(char **args, char ***env, int *exit_code);
 /*--------------------*/
 /*  Custom finctions  */
 /*--------------------*/
-// void	my_strcopy(char **dst, const char *src1, const char *src2, const char *src3);
+char	**split_str(char const *s, char c);
 char	*my_strjoin(const char *str1, const char *str2, const char *str3);
 char	*my_strndup(const char *str, int len);
 void	*my_realloc(void *ptr, int old_size, int new_size);
@@ -282,6 +290,7 @@ void	free_array(char **array);
 void	free_list(t_cmd **head);
 void	free_all(t_data *data);
 void	free_exit(t_data *data, int exit_code);
+void	free_error_exit(t_data *data, int exit_code, char *error_msg);
 void	clean_tokens(t_data *data);
 
 /*-----------------*/

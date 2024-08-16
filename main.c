@@ -65,10 +65,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	line = NULL;
 	exit_code = 0;
-	// _init_terminal(&gl_command);
+	_init_terminal(exit_code);
 	set_data(&data, envp, &exit_code);
 	while(1)
 	{
+		_handle_signals(INIT);
 		line = read_line(line);
 		if (!line)
 			break ;
@@ -76,7 +77,6 @@ int	main(int argc, char **argv, char **envp)
 		int i = 0;
 		while (data.tokens && data.tokens[i] != NULL)
 		{
-			// printf("[ %s ]\n", t.tokens[i]);
 			if (!parse(data.tokens) && data.tokens)
 				break ;
 			i++;

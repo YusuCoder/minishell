@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 13:22:10 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/16 01:59:33 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/16 20:42:34 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,26 +26,6 @@ int	count_string(char	*token)
 	}
 	return (i);
 }
-
-// char	*fill_e_name(char *line, int i)
-// {
-// 	int		x;
-// 	char	*e_name;
-
-// 	x = 0;
-// 	while (line[i + x])
-// 		x++;
-// 	e_name = (char *)malloc(sizeof(char) * (i + 1));
-// 	if (!e_name)
-// 		return (NULL);
-// 	while (line[i + x])
-// 	{
-// 		e_name[i] = line[i + x];
-// 		x++;
-// 	}
-// 	e_name[x] = '\0';
-// 	return (e_name);
-// }
 
 char *fill_e_name(char *line, int length)
 {

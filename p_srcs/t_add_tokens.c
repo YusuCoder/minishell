@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:54:19 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/16 13:46:25 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/16 20:45:47 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,24 +66,22 @@ int	handle_variable_or_quoted_string(const char *str)
 {
 	char	quote;
 
-	int len = 1; // Start at 1 to account for the '$' itself
-	if (str[len] == '"' || str[len] == '\'') // Quoted string following $
+	int len = 1;
+	if (str[len] == '"' || str[len] == '\'')
 	{
 		quote = str[len];
-		len++; // Include the opening quote
+		len++;
 		while (str[len] && str[len] != quote)
 		{
 			len++;
 		}
 		if (str[len] == quote)
-			len++; // Include the closing quote
+			len++;
 	}
 	else
 	{
 		while (str[len] && (isalnum(str[len]) || str[len] == '_'))
-		{
 			len++;
-		}
 	}
 	return (len);
 }

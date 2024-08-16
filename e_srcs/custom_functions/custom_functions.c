@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   custom_functions.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/16 12:19:39 by tkubanyc          #+#    #+#             */
+/*   Updated: 2024/08/16 17:03:54 by tkubanyc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
@@ -74,6 +85,7 @@ int	is_number(char *arg)
 	return (1);
 }
 
+// Join 3 strings into 1 and allocate memory for it
 char	*my_strjoin(const char *str1, const char *str2, const char *str3)
 {
 	char	*new_str;
@@ -100,26 +112,6 @@ char	*my_strjoin(const char *str1, const char *str2, const char *str3)
 	*ptr = '\0';
 	return (new_str);
 }
-
-// void	my_strcopy(char **dst, const char *src1, const char *src2, const char *src3)
-// {
-// 	char	*ptr;
-
-// 	if (!src1 && !src2 && !src3)
-// 	{
-// 		*dst = NULL;
-// 		return ;
-// 	}
-// 	ptr = *dst;
-// 	printf("ptr = dst = %s\n", *dst);
-// 	while (*src1)
-// 		*ptr++ = *src1++;
-// 	while (*src2)
-// 		*ptr++ = *src2++;
-// 	while (*src3)
-// 		*ptr++ = *src3++;
-// 	*ptr = '\0';
-// }
 
 // // Custom strcpy function
 // char *my_strcpy(char *dest, const char *src)
