@@ -1,5 +1,5 @@
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	count_arguments(char **tokens, int index)
 {
@@ -30,7 +30,7 @@ int	count_commands(char **tokens)
 	return (counter);
 }
 
-char	**set_command_args(char **tokens, int len, int index)
+char	**cmd_list_set_args(char **tokens, int len, int index)
 {
 	char	**cmd_args;
 	int		i;
@@ -56,7 +56,7 @@ char	**set_command_args(char **tokens, int len, int index)
 	return (cmd_args);
 }
 
-void	add_new_command(t_cmd **head, char **tokens, int len, int index)
+void	cmd_list_add_new(t_cmd **head, char **tokens, int len, int index)
 {
 	t_cmd	*new_cmd;
 	t_cmd	*current;
@@ -64,10 +64,9 @@ void	add_new_command(t_cmd **head, char **tokens, int len, int index)
 	new_cmd = malloc(sizeof(t_cmd));
 	if (new_cmd == NULL)
 		exit(EXIT_FAILURE);
-	new_cmd->args = set_command_args(tokens, len, index);
+	new_cmd->args = cmd_list_set_args(tokens, len, index);
 	new_cmd->args_num = len;
-	new_cmd->fd_input = STDIN_FILENO;
-	new_cmd->fd_output = STDOUT_FILENO;
+	// new_cmd->fd[2] = 0;
 	new_cmd->is_heredoc = 0;
 	new_cmd->hrdc_delimeter = NULL;
 	new_cmd->is_redir_input = 0;
@@ -85,7 +84,7 @@ void	add_new_command(t_cmd **head, char **tokens, int len, int index)
 	}
 }
 
-void	create_command_list(char **tokens, t_data *data)
+void	cmd_list_create(char **tokens, t_data *data)
 {
 	int		args_num;
 	int		cmds_num;
@@ -103,7 +102,7 @@ void	create_command_list(char **tokens, t_data *data)
 		else
 		{
 			args_num = count_arguments(tokens, i);
-			add_new_command(&data->cmd_list, tokens, args_num, i);
+			cmd_list_add_new(&data->cmd_list, tokens, args_num, i);
 			i = i + args_num;
 		}
 	}

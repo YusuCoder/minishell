@@ -6,14 +6,14 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 13:18:11 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/12 20:24:27 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/14 11:52:22 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 // Function to execute the "pwd" command
-void	execute_pwd(int *exit_code)
+int	execute_pwd(int *exit_code)
 {
 	char	curr_dir[PATH_MAX];
 
@@ -21,8 +21,9 @@ void	execute_pwd(int *exit_code)
 	{
 		perror("getcwd");
 		*exit_code = 1;
-		return ;
+		return (-1);
 	}
 	printf("%s\n", curr_dir);
 	*exit_code = 0;
+	return (0);
 }

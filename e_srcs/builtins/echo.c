@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 19:24:03 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/06 13:13:45 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/14 11:57:46 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	echo_skip_all_n(char **args, int *i)
 }
 
 // Function to execute the "echo" command
-void	execute_echo(char **args, int *exit_code)
+int	execute_echo(char **args, int *exit_code)
 {
 	int		new_line;
 	int		space;
@@ -81,4 +81,5 @@ void	execute_echo(char **args, int *exit_code)
 	if (new_line)
 		printf("\n");
 	*exit_code = 0;
+	return (0);
 }

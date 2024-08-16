@@ -2,23 +2,25 @@
 #include "../../includes/minishell.h"
 
 // Handle export argument with no value
-void	export_arg_no_value(char *arg, char ***env, int *exit_code)
+int	export_arg_no_value(char *arg, char ***env, int *exit_code)
 {
 	char	*name;
 
 	name = arg;
 	if (env_var_find(*env, name) == -1)
 	{
-		if (export_update_env(env, name, NULL, 0) != 0)
+		if (export_update_env(env, name, NULL, 0) == -1)
 		{
-			perror("export");
+			perror("malloc");
 			*exit_code = 1;
+			return (-1);
 		}
 	}
+	return (0);
 }
 
 // Handle export argument with value
-void	export_arg_with_value(char *arg, char *equal_sign,
+int	export_arg_with_value(char *arg, char *equal_sign,
 	char ***env, int *exit_code)
 {
 	char	*name;
@@ -30,36 +32,42 @@ void	export_arg_with_value(char *arg, char *equal_sign,
 	{
 		if (export_update_env(env, name, value, 1) != 0)
 		{
-			perror("export");
+			perror("malloc");
 			*exit_code = 1;
+			return (-1);
 		}
 	}
 	else
 	{
-		write(2, "export: invalid argument\n", 25);
+		perror("malloc");
 		*exit_code = 1;
+		return (-1);
 	}
 	free(name);
 	free(value);
+	return (0);
 }
 
 // Handle export command with arguments
-void	export_with_args(char *arg, char ***env, int *exit_code)
+int	export_with_args(char *arg, char ***env, int *exit_code)
 {
+	int		result;
 	char	*equal_sign;
 
+	result = 0;
 	equal_sign = ft_strchr(arg, '=');
 	if (equal_sign)
-		export_arg_with_value(arg, equal_sign, env, exit_code);
+		result = export_arg_with_value(arg, equal_sign, env, exit_code);
 	else
-		export_arg_no_value(arg, env, exit_code);
-	if (*exit_code != 0)
-		return ;
+		result = export_arg_no_value(arg, env, exit_code);
+	if (result == -1)
+		return (-1);
 	*exit_code = 0;
+	return (0);
 }
 
 // Handle export command with no arguments
-void	export_no_args(char **env, int *exit_code)
+int	export_no_args(char **env, int *exit_code)
 {
 	char	**sorted_env;
 	int		i;
@@ -70,10 +78,10 @@ void	export_no_args(char **env, int *exit_code)
 	{
 		perror("malloc");
 		*exit_code = 1;
-		return ;
+		return (-1);
 	}
-	i = 0;
-	while (sorted_env[i])
+	i = -1;
+	while (sorted_env[++i])
 	{
 		equal_sign = ft_strchr(sorted_env[i], '=');
 		if (equal_sign)
@@ -82,29 +90,32 @@ void	export_no_args(char **env, int *exit_code)
 				equal_sign + 1);
 		else
 			printf("declare -x %s\n", sorted_env[i]);
-		i++;
 	}
 	free(sorted_env);
 	*exit_code = 0;
+	return (0);
 }
 
 // Main export command execution function
-void	execute_export(char **args, char ***env, int *exit_code)
+int	execute_export(char **args, char ***env, int *exit_code)
 {
+	int	result;
 	int	i;
 
+	result = 0;
 	i = 1;
 	if (args[i] == NULL)
-		export_no_args(*env, exit_code);
+		result = export_no_args(*env, exit_code);
 	else
 	{
 		while (args[i])
 		{
-			export_with_args(args[i], env, exit_code);
-			if (*exit_code != 0)
-				return ;
+			result = export_with_args(args[i], env, exit_code);
+			if (result == -1)
+				return (-1);
 			i++;
 		}
 		*exit_code = 0;
 	}
+	return (result);
 }

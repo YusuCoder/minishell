@@ -45,7 +45,11 @@ char	*env_var_create(const char *name, const char *value)
 	if (value)
 	{
 		temp = ft_strjoin(name, "=");
+		if (temp == NULL)
+			return (NULL);
 		new_env_var = ft_strjoin(temp, value);
+		if (new_env_var == NULL)
+			return (NULL);
 		free(temp);
 	}
 	else
