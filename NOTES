@@ -3,4 +3,24 @@ ascd        ads
 
 segfault for emty inoput
 
+first step in the tokenization is that you are saving as tokens and the spaces
+in the parsing process  if while (token[i][0] != SPACE) strjoin to my agr[i]
+is not space
+[echo][HOME][][][][$USER][$USER][][]-->[HOME],[$USER$USER]
 
+
+
+Tokenization
+[SPACE][PIPE][REDIR][APPEND_REDIR][EXP][S_QUOTES][D_QUOTES]
+parsing
+[COMAND][AGR1][ARG2][ARG3].......[|]
+[PIPE 1][PIPE2]...........
+
+$user$user"'$user"
+
+[su[1][3]]
+[su[2][4]]
+[su[3][1]]
+
+
+here i want to add the tokenization with $ and make a separate tokenn each whitespace and the single and double quotes untill it finds the closing quote

@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 13:53:46 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/14 14:04:20 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/16 01:45:39 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,30 @@ int	is_exeption(char c)
 	return (0);
 }
 
+// int	still_dollar_sign_there(char *token)
+// {
+// 	int	i;
+// 	int	check;
+// 	int	in_single_quote;
+// 	int	in_double_quote;
+
+// 	i = 0;
+// 	check = 0;
+// 	in_single_quote = 0;
+// 	in_double_quote = 0;
+// 	while (token[i])
+// 	{
+// 		if (token[i] == '\'' && !in_double_quote)
+// 			in_single_quote = !in_single_quote;
+// 		else if (token[i] == '"' && !in_single_quote)
+// 			in_double_quote = !in_double_quote;
+// 		if (token[i] == '$' && !in_single_quote)
+// 			check++;
+// 		i++;
+// 	}
+// 	return (check > 0);
+// }
+
 int	still_dollar_sign_there(char *token)
 {
 	int	i;
@@ -79,9 +103,31 @@ int	expansion_of_first_token(char *token)
 	}
 	return (i);
 }
+
+char	*remove_double_quotes(char *str)
+{
+	int	len;
+
+	int i, j = 0;
+	len = strlen(str);
+	char *result = malloc(len + 1); // Allocate memory for the result string
+	if (!result)
+		return (NULL); // Handle memory allocation failure
+	for (i = 0; i < len; i++)
+	{
+		if (str[i] != '"')
+		{ // Skip double quotes
+			result[j] = str[i];
+			j++;
+		}
+	}
+	result[j] = '\0'; // Null-terminate the result string
+	return (result);
+}
 /*
 	this function is responsible for expanding a certain token with ($) within the array
 */
+
 void	expand(char **tokens, char **env, t_data *data)
 {
 	int		i;
@@ -93,28 +139,27 @@ void	expand(char **tokens, char **env, t_data *data)
 	while (tokens[i])
 	{
 		if (expansion_of_first_token(tokens[i]) != -1)
-		// Check if the current token needs expansion
 		{
 			dollar_ptr = ft_strchr(tokens[i], '$');
 			if (!dollar_ptr || dollar_ptr[1] == '\0' || count_str(dollar_ptr[1])
 				|| is_exeption(dollar_ptr[1]))
-			// If no $ found or $ is at the end or a special case, skip
 			{
 				i++;
 				continue ;
 			}
 			x = expansion_of_first_token(tokens[i]);
-				// Getting the length of the expansion target
 			expanded_token = dollar_sign(tokens[i], tokens[i] + x + 1, env,
-											data);
-											// Expand the token based on the environment variables
-			tokens[i] = expanded_token;
+					data);
+			free(tokens[i]);
+			tokens[i] = remove_double_quotes(expanded_token);
+			free(expanded_token);
 		}
 		if (still_dollar_sign_there(tokens[i]))
 			continue ;
 		i++;
 	}
 }
+
 
 // int main() {
 // 	t_ryusupov env_struct = {

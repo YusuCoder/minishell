@@ -22,6 +22,7 @@ SRC_FILES	:= ./p_srcs/i_init_cmd.c \
 				./p_srcs/expanding.c \
 				./p_srcs/expanding_1.c \
 				./p_srcs/expanding_2.c \
+				./p_srcs/quote_handling.c \
 				./e_srcs/command_list.c \
 				./e_srcs/command_list_utils.c \
 				./e_srcs/environment/env_set.c \

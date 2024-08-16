@@ -77,16 +77,16 @@ int	main(int argc, char **argv, char **envp)
 		while (data.tokens && data.tokens[i] != NULL)
 		{
 			// printf("[ %s ]\n", t.tokens[i]);
-			if (parse(data.tokens) && data.tokens)
-			{
-			}
+			if (!parse(data.tokens) && data.tokens)
+				break ;
 			i++;
 		}
 		i = 0;
 		if (data.tokens != NULL)
 		{
 			expand(data.tokens, data.env, &data);
-			create_command_list(data.tokens, &data);
+			quote_handing(data.tokens);
+ 			create_command_list(data.tokens, &data);
 			execute(&data);
 		}
 		// if (!t.tokens)

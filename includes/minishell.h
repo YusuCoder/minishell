@@ -28,6 +28,7 @@
 #define SQUOTE 39
 #define DQUOTE 34
 #define DEFAULT 0
+#define DOLLAR '$'
 
 #ifndef TAB
 #define TAB 9
@@ -124,7 +125,7 @@ void	_free_it(char **p);
 void	free_ptr(void *ptr);
 /*----------TOKENIZING-----------*/
 char	**tokenizing(const char *str);
-int		take_tokens(char **token, const char *str, int counter, int i);
+int 	take_tokens(char **token, const char *str, int i);
 int		matching_quotes(const char *str);
 int		count_words(const char *str, int i);
 int		count_tokens(char token);
@@ -137,6 +138,9 @@ int		parse_redirs(char *current, char *next);
 int		count_str(char c);
 int		quotes_check(char *t);
 int		is_empty(const char *str);
+/*--------QUOTE HANDLING----------*/
+void	quote_handing(char **tokens);
+void 	quote_handling_r(char **tokens);
 /*------------EXPANDING------------*/
 // void	expand(char	**tokens, char **env);
 void 	expand(char **tokens, char **env, t_data *exit_code);

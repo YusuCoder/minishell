@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 13:22:10 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/13 20:52:36 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/16 01:59:33 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ int	count_string(char	*token)
 	while (token[i])
 	{
 		if (token[i] == '$' && !count_str(token[i]) && not_in_squote(token, i))
-			return (1);
+			break;
 		i++;
 	}
-	return (0);
+	return (i);
 }
 
 // char	*fill_e_name(char *line, int i)
