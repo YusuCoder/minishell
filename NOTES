@@ -24,3 +24,28 @@ $user$user"'$user"
 
 
 here i want to add the tokenization with $ and make a separate tokenn each whitespace and the single and double quotes untill it finds the closing quote
+
+
+
+
+errors
+
+PIPE = if the command is echo hello | cat -3 |cat-3|cat-e taking pipe without space as one token
+ ✗  "cat /dev/random | head -c 100 | wc -c"
+ echo ""'' shoul display empty line
+ echo $TEST$TEST=lol$TEST""lol
+ echo "$?TEST" = DONE
+ export 1fdasf
+ echo | | = exiting entire shell
+
+
+
+
+/bin/echo ''totally logical''	= space at the beginning = fixed!
+echo """_"n = space between = fixed
+echo "" "" "" -n -n -n -n	= fixed
+export T=">>"
+echo '$'$'$'$'$' = EXPANDING PROBLEM
+mkdir " " = should create an empty name folder
+
+

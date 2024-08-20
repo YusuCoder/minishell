@@ -6,28 +6,31 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:28:22 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/17 00:22:58 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/20 20:15:23 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-volatile sig_atomic_t	g_last_signal_received = 0;
+int	g_signal = 0;
 
 // Function to determine the exit code
 void	determine_exit_code(int *exit_code)
 {
-	if (g_last_signal_received == SIGINT)
+	if (g_signal == SIGINT)
 		*exit_code = 130;
-	else if (g_last_signal_received == SIGQUIT)
+	else if (g_signal == SIGQUIT)
 		*exit_code = 131;
 	else
 		*exit_code = 0;
 }
-/*Terminal ctrl setting disables echo messages of ctrl signals using flag ECHOCTRL*/
+/*	Terminal ctrl setting disables echo messages of
+	ctrl signals using flag ECHOCTRL
+*/
+
 void	_handle_child_signal(int signal)
 {
-	g_last_signal_received = signal;
+	g_signal = signal;
 	if (signal == SIGINT)
 	{
 		write(1, "^C\n", 3);
@@ -78,9 +81,8 @@ void	_handle_signals(t_process stats)
 	}
 }
 
-void	_init_terminal(int exit_code)
+void	_init_terminal(void)
 {
-	(void)exit_code;
 	struct termios	term;
 
 	if (tcgetattr(0, &term) != 0)

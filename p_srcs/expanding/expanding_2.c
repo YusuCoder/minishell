@@ -6,14 +6,13 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 13:22:10 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/16 20:42:34 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/20 20:05:54 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-
-int	count_string(char	*token)
+int	count_string(char *token)
 {
 	int	i;
 
@@ -21,29 +20,31 @@ int	count_string(char	*token)
 	while (token[i])
 	{
 		if (token[i] == '$' && !count_str(token[i]) && not_in_squote(token, i))
-			break;
+			break ;
 		i++;
 	}
 	return (i);
 }
 
-char *fill_e_name(char *line, int length)
+char	*fill_e_name(char *line, int length)
 {
-    char *e_name = (char *)malloc(sizeof(char) * (length + 1)); // Allocate memory for the substring + null terminator
-    if (!e_name)
-        return (NULL);
+	char	*e_name;
+	int		i;
 
-    for (int i = 0; i < length; i++) // Copy the substring
-    {
-        e_name[i] = line[i];
-    }
-    e_name[length] = '\0'; // Null-terminate the string
-
-    return e_name;
+	i = 0;
+	e_name = (char *)malloc(sizeof(char) * (length + 1));
+	if (!e_name)
+		return (NULL);
+	while (i < length)
+	{
+		e_name[i] = line[i];
+		i++;
+	}
+	e_name[length] = '\0';
+	return (e_name);
 }
 
-
-char	*get_x_string(char	*token)
+char	*get_x_string(char *token)
 {
 	int		i;
 	char	*res;
@@ -55,7 +56,7 @@ char	*get_x_string(char	*token)
 			break ;
 		i++;
 	}
-	res = (char *)malloc(sizeof(char) * (i  + 1));
+	res = (char *)malloc(sizeof(char) * (i + 1));
 	if (!res)
 		return (NULL);
 	i = 0;
@@ -70,13 +71,12 @@ char	*get_x_string(char	*token)
 	return (res);
 }
 
-
 char	*get_c_string(char *token)
 {
-	int	i;
-	int	x;
-	int	size;
-	char *res;
+	int		i;
+	int		x;
+	int		size;
+	char	*res;
 
 	i = count_string(token);
 	i++;

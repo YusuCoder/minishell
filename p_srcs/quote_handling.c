@@ -6,113 +6,62 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 16:41:07 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/14 18:07:56 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:46:48 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// char	*remove_outer_quotes(char **token)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	*new_token;
-
-// 	i = 0;
-// 	j = 0;
-// 	new_token = (char *)malloc(ft_strlen(token) * sizeof(char) + 1);
-// 	if (!new_token)
-// 		return (NULL);
-// 	while (token[i])
-// 	{
-// 		if (token[i] == '\'' || token[i] == '\"')
-// 		{
-// 			i++;
-// 			continue;
-// 		}
-// 		new_token[j] = token[i];
-// 		i++;
-// 		j++;
-// 	}
-// 	new_token[j] = '\0';
-// 	return (new_token);
-// }
-
-char	*remove_first_quote(char *token)
+static void	handle_quotes(char *token, t_quote_state *state)
 {
-	int		i;
-	int		j;
-	int		check;
-	char	*new_token;
-
-	i = 0;
-	j = 0;
-	check = 0;
-	new_token = (char *)malloc(sizeof(char) * ft_strlen(token) + 1);
-	if (!new_token)
-		return (NULL);
-	while (token[i])
+	if (!(state->found_quote) && (token[state->i] == '\"'
+			|| token[state->i] == '\''))
 	{
-		if (check == 0 && (token[i] == '\"' || token[i] == '\''))
-		{
-			i++;
-			check = 1;
-		}
-		new_token[j] = token[i];
-		i++;
-		j++;
+		state->found_quote = 1;
+		state->quote_char = token[state->i];
+		(state->i)++;
 	}
-	new_token[j] = '\0';
-	return (new_token);
+	else if (state->found_quote && token[state->i] == state->quote_char)
+	{
+		state->found_quote = 0;
+		(state->i)++;
+	}
+	else
+	{
+		state->result[state->j++] = token[state->i++];
+	}
 }
 
-char	*remove_last_quote(char	*token)
+char	*remove_quotes(char *token)
 {
-	int	i;
-	int	j;
-	int	check;
-	char	*new_token;
+	t_quote_state	state;
+	int				len;
 
-	i = ft_strlen(token) - 1;
-	check = 0;
-	new_token = (char *)malloc(ft_strlen(token) * sizeof(char) + 1);
-	while (i > 0)
+	len = ft_strlen(token);
+	state.i = 0;
+	state.j = 0;
+	state.found_quote = 0;
+	state.quote_char = '\0';
+	state.result = (char *)malloc((len + 1) * sizeof(char));
+	if (!state.result)
+		return (NULL);
+	while (token[state.i])
 	{
-		if (check == 0 && (token[i] == '\"' || token[i] == '\''))
-			check = i;
-		i--;
+		handle_quotes(token, &state);
 	}
-	j = 0;
-	while (i < (int)(ft_strlen(token)))
-	{
-		if (i == check)
-			i++;
-		new_token[j] = token[i];
-		j++;
-		i++;
-	}
-	new_token[j] = '\0';
-	return (new_token);
+	state.result[state.j] = '\0';
+	return (state.result);
 }
 
 void	quote_handing(char **tokens)
 {
-	int		i;
-	char	*temp;
+	int	i;
 
 	i = 0;
 	while (tokens[i])
 	{
 		if (ft_strchr(tokens[i], '\"') || ft_strchr(tokens[i], '\''))
-		{
-			temp = tokens[i];
-			tokens[i] = remove_first_quote(tokens[i]);
-			free(temp);
-			temp = NULL;
-			temp = tokens[i];
-			tokens[i] = remove_last_quote(tokens[i]);
-			free(temp);
-		}
+			tokens[i] = remove_quotes(tokens[i]);
 		i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 19:20:07 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/17 00:20:27 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/20 20:16:16 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	execute_external(t_data *data, t_cmd *cmd)
 		// handle_redirections();
 		if (execve(cmd_path, cmd->args, data->env) == -1)
 			free_error_exit(data, *data->exit_code, "execve");
+		free(cmd_path);
 	}
-	free(cmd_path);
 }
 
 void	execute_builtin(t_data *data, char **args)

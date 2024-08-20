@@ -6,11 +6,11 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 10:43:43 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/16 20:27:46 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/20 20:05:49 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 char	*get_v_name(char *token)
 {
@@ -46,23 +46,21 @@ char	*get_e_name(char *v_name, char **env)
 	char	*equal_sign;
 
 	e_name = NULL;
-	v_name_len = strlen(v_name);
+	v_name_len = ft_strlen(v_name);
 	i = 0;
 	while (env[i] != NULL)
 	{
-		equal_sign = strchr(env[i], '=');
+		equal_sign = ft_strchr(env[i], '=');
 		if (equal_sign != NULL && (size_t)(equal_sign - env[i]) == v_name_len
-			&& strncmp(v_name, env[i], v_name_len) == 0)
+			&& ft_strncmp(v_name, env[i], v_name_len) == 0)
 		{
-			e_name = fill_e_name(equal_sign + 1, strlen(equal_sign + 1));
+			e_name = fill_e_name(equal_sign + 1, ft_strlen(equal_sign + 1));
 			break ;
 		}
 		i++;
 	}
 	if (e_name == NULL)
-	{
-		e_name = (char *)calloc(1, 1);
-	}
+		e_name = (char *)ft_calloc(1, 1);
 	return (e_name);
 }
 
@@ -77,8 +75,6 @@ char	*replace_token(char *token, char *e_name)
 	c = get_c_string(token);
 	res = ft_strjoin(x, e_name);
 	free(x);
-	if (e_name != NULL)
-		free(e_name);
 	final_res = ft_strjoin(res, c);
 	free(res);
 	free(c);
@@ -116,13 +112,11 @@ char	*dollar_sign(char *sign, char *token, char **env, t_data *data)
 	char	*v_name;
 	char	*e_name;
 	char	*n_token;
-	int		i;
 
-	i = 0;
 	e_name = NULL;
 	v_name = get_v_name(token);
-	if (ft_strcmp(v_name, "?") == 0)
-		e_name = ft_itoa(*(data->exit_code));
+	if (v_name[0] == '?')
+		e_name = replace_question(v_name, data->exit_code);
 	else
 		e_name = get_e_name(v_name, env);
 	if (e_name == NULL || e_name[0] == '\0')
@@ -133,5 +127,7 @@ char	*dollar_sign(char *sign, char *token, char **env, t_data *data)
 		n_token = replace_token(sign, e_name);
 	if (v_name)
 		free(v_name);
+	if (e_name != NULL)
+		free(e_name);
 	return (n_token);
 }

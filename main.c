@@ -65,7 +65,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	line = NULL;
 	exit_code = 0;
-	_init_terminal(exit_code);
+	_init_terminal();
 	set_data(&data, envp, &exit_code);
 	while(1)
 	{
@@ -77,57 +77,21 @@ int	main(int argc, char **argv, char **envp)
 		int i = 0;
 		while (data.tokens && data.tokens[i] != NULL)
 		{
-			if (!parse(data.tokens) && data.tokens)
-				break ;
+			if (!parse(data.tokens, &data) && data.tokens)
+			{
+				expand(data.tokens, data.env, &data);
+				quote_handing(data.tokens);
+ 				cmd_list_create(data.tokens, &data);
+				execute(&data);
+			}
+			else
+			{
+				free_array(data.tokens);
+				break;
+			}
 			i++;
 		}
-		i = 0;
-		if (data.tokens != NULL)
-		{
-			expand(data.tokens, data.env, &data);
-			quote_handing(data.tokens);
- 			cmd_list_create(data.tokens, &data);
-			execute(&data);
-		}
-		// if (!t.tokens)
-		// 	return (0);
 	}
 	return (exit_code);
 }
 
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	char		*line;
-// 	t_command	t;
-// 	int			exit_code;
-
-// 	(void)argv;
-// 	(void)argc;
-// 	line = NULL;
-// 	exit_code = 0;
-// 	_init_terminal(&gl_command, envp);
-// 	t.envp = env_set(envp);
-// 	env_value_delete(t.envp, "OLDPWD");
-// 	// print_envp(t.envp);
-// 	while(1)
-// 	{
-// 		line = read_line(line);
-// 		if (!line)
-// 			break ;
-// 		t.tokens = tokenizing(line);
-// 		int i = 0;
-// 		while (t.tokens && t.tokens[i] != NULL)
-// 		{
-// 			// printf("[ %s ]\n", t.tokens[i]);
-// 			if (parse(t.tokens) && t.tokens)
-// 			{
-// 			}
-// 			i++;
-
-// 		}
-// 		execute(&t, &exit_code);
-// 		// if (!t.tokens)
-// 		// 	return (0);
-// 	}
-// 	return (exit_code);
-// }

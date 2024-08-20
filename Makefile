@@ -1,6 +1,6 @@
 
 NAME	:= minishell
-CC		:= gcc
+CC		:= cc
 CFLAGS	:= -Wall -Wextra -Werror -g
 RM		:= rm -rf
 
@@ -11,16 +11,15 @@ E_SRC_PATH	:= ./e_srcs
 MAIN		:= main.c
 SRC_FILES	:= ./p_srcs/signals.c\
 				./p_srcs/errors.c \
-				./p_srcs/t_tokenize.c \
-				./p_srcs/t_add_tokens.c \
-				./p_srcs/t_utils.c \
-				./p_srcs/parse.c \
-				./p_srcs/set_envp.c \
-				./p_srcs/count_commands.c \
-				./p_srcs/sub_cmd_arrays.c \
-				./p_srcs/expanding.c \
-				./p_srcs/expanding_1.c \
-				./p_srcs/expanding_2.c \
+				./p_srcs/tokenization/t_tokenize.c \
+				./p_srcs/tokenization/t_add_tokens.c \
+				./p_srcs/tokenization/t_utils.c \
+				./p_srcs/parsing/parse.c \
+				./p_srcs/parsing/parse_utils.c \
+				./p_srcs/expanding/expanding.c \
+				./p_srcs/expanding/expanding_1.c \
+				./p_srcs/expanding/expanding_2.c \
+				./p_srcs/expanding/expanding_3.c \
 				./p_srcs/quote_handling.c \
 				./e_srcs/custom_functions/custom_functions.c \
 				./e_srcs/custom_functions/split_str.c \

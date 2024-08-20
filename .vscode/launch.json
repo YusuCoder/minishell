@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "clang",
+            "request": "launch",
+            "name": "Debug Minishell",
+            "program": "${workspaceFolder}/minishell",
+            "args": [
+                
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build Minishell",
+            "stopOnEntry": false
+        }
+    ]
+}
+
+

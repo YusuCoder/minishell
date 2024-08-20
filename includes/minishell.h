@@ -106,6 +106,20 @@ typedef struct s_data
 	char		*last_arg;
 }				t_data;
 
+typedef struct s_quote_state
+{
+	int		in_single_quote;
+	int		in_double_quote;
+	int		squote;
+	int		dquote;
+	int		i;
+	int		j;
+	int		found_quote;
+	char	quote_char;
+	char	*result;
+
+}   t_quote_state;
+
 typedef enum s_process
 {
 	INIT,
@@ -113,17 +127,18 @@ typedef enum s_process
 	CHILD_PROCESS,
 }			t_process;
 
-/*----global variable-----*/
-t_data	gl_command; // <------- !!! DON"T FORGET TO CHANGE !!!
+// /*----global variable-----*/
+// int	g_signal = 0;
 
 /*-----------SIGNALS----------*/
-void	_init_terminal(int exit_code);
+void	_init_terminal(void);
 void	_handle_signals(t_process stats);
 void	determine_exit_code(int *exit_code);
 /*--------Error messages---------*/
 void	_err_msg(char *msg, char err_code);
 void	_free_it(char **p);
 void	free_ptr(void *ptr);
+void	ft_perror_parsing(char *msg1, char *msg2, char *arg, int *exit_code);
 /*----------TOKENIZING-----------*/
 char	**tokenizing(const char *str);
 int 	take_tokens(char **token, const char *str, int i);
@@ -133,7 +148,7 @@ int		count_tokens(char token);
 int		get_word_len(const char *str, int i);
 int		count_str(char c);
 /*-----------PARSING-------------*/
-int		parse(char	**t);
+int		parse(char	**t, t_data *exit_code);
 int		check_beginning_and_end(char **t, int i);
 int		parse_redirs(char *current, char *next);
 int		count_str(char c);
@@ -141,6 +156,7 @@ int		quotes_check(char *t);
 int		is_empty(const char *str);
 /*--------QUOTE HANDLING----------*/
 void	quote_handing(char **tokens);
+char 	*remove_last_quote(const char *token);
 void 	quote_handling_r(char **tokens);
 /*------------EXPANDING------------*/
 // void	expand(char	**tokens, char **env);
@@ -150,6 +166,7 @@ int		is_exeption(char c);
 int		still_dollar_sign_there(char *token);
 char	*dollar_sign(char *sign, char *token,  char **env, t_data *data);
 int		expansion_of_first_token(char *token);
+char	*replace_question(const char *var, int *exit_code);
 bool	var_between_quotes(char *str, int i);
 int 	replace_var(char **token_array, char *var_value, int index);
 int 	erase_var(char **token_array, char *str, int index);
