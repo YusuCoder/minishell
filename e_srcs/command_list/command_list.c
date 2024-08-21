@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:17:37 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:18:26 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/20 09:09:17 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,41 +67,40 @@ char	**cmd_list_set_args(char **tokens, int len, int index)
 	return (cmd_args);
 }
 
-void	cmd_list_add_new(t_cmd **head, char **tokens, int len, int index)
+int	cmd_list_add_new(t_cmd **head, char **tokens, int len, int index)
 {
 	t_cmd	*new_cmd;
-	t_cmd	*current;
 
 	new_cmd = malloc(sizeof(t_cmd));
 	if (new_cmd == NULL)
-		exit(EXIT_FAILURE);
+		return (perror("malloc"), -1);
 	new_cmd->args = cmd_list_set_args(tokens, len, index);
 	new_cmd->args_num = len;
 	new_cmd->is_heredoc = 0;
-	new_cmd->hrdc_delimeter = NULL;
 	new_cmd->is_redir_input = 0;
 	new_cmd->is_redir_output = 0;
-	new_cmd->file_input = NULL;
-	new_cmd->file_output = NULL;
-	new_cmd->is_output_append = 0;
+	new_cmd->heredoc_list = NULL;
+	new_cmd->input_list = NULL;
+	new_cmd->output_list = NULL;
+	new_cmd->cmd_array = NULL;
 	new_cmd->next = NULL;
 	if (*head == NULL)
 		*head = new_cmd;
 	else
-	{
-		current = list_get_last(*head);
-		current->next = new_cmd;
-	}
+		cmd_list_add(*head, new_cmd);
+	return (0);
 }
 
-void	cmd_list_create(char **tokens, t_data *data)
+void	cmd_list_handler(t_data *data)
 {
+	char	**tokens;
 	int		args_num;
 	int		cmds_num;
 	int		i;
 
-	if (!tokens || !data)
-		exit(EXIT_FAILURE);
+	if (data == NULL || data->tokens == NULL)
+		return ;
+	tokens = data->tokens;
 	cmds_num = count_commands(tokens);
 	data->cmd_num = cmds_num;
 	i = 0;
@@ -112,7 +111,8 @@ void	cmd_list_create(char **tokens, t_data *data)
 		else
 		{
 			args_num = count_arguments(tokens, i);
-			cmd_list_add_new(&data->cmd_list, tokens, args_num, i);
+			if (cmd_list_add_new(&data->cmd_list, tokens, args_num, i) == -1)
+				free_exit(data, 1);
 			i = i + args_num;
 		}
 	}

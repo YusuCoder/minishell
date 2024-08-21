@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:25:21 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 14:46:43 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/20 10:15:01 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,26 @@ void	free_array(char **array)
 	free(array);
 }
 
-void	free_list(t_cmd **head)
+void	free_redir_list(t_redir **head)
+{
+	t_redir	*current;
+	t_redir	*next;
+
+	if (*head == NULL)
+		return ;
+	current = *head;
+	while (current != NULL)
+	{
+		if (current->name != NULL)
+			free(current->name);
+		next = current->next;
+		free(current);
+		current = next;
+	}
+	*head = NULL;
+}
+
+void	free_cmd_list(t_cmd **head)
 {
 	t_cmd	*current;
 	t_cmd	*next;
@@ -39,6 +58,10 @@ void	free_list(t_cmd **head)
 	while (current != NULL)
 	{
 		free_array(current->args);
+		free_array(current->cmd_array);
+		free_redir_list(&current->heredoc_list);
+		free_redir_list(&current->input_list);
+		free_redir_list(&current->output_list);
 		next = current->next;
 		free(current);
 		current = next;
@@ -46,7 +69,7 @@ void	free_list(t_cmd **head)
 	*head = NULL;
 }
 
-void	free_all(t_data *data)
+void	free_exit(t_data *data, int exit_code)
 {
 	if (data == NULL)
 		return ;
@@ -54,12 +77,7 @@ void	free_all(t_data *data)
 	data->env = NULL;
 	free_array(data->tokens);
 	data->tokens = NULL;
-	free_list(&data->cmd_list);
-}
-
-void	free_exit(t_data *data, int exit_code)
-{
-	free_all(data);
+	free_cmd_list(&data->cmd_list);
 	exit(exit_code);
 }
 

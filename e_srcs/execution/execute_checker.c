@@ -3,26 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   execute_checker.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:05:44 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/17 14:29:01 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/20 21:05:55 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	is_builtin_cmd_only(t_data *data)
 {
 	if (data->cmd_num == 1
-		&& is_builtin(data->cmd_list->args[0])
+		&& is_builtin(data->cmd_list->cmd_array[0])
 		&& data->cmd_list->is_heredoc == 0
 		&& data->cmd_list->is_redir_input == 0
 		&& data->cmd_list->is_redir_output == 0)
-	{
-		execute_builtin(data, data->cmd_list->args);
 		return (1);
-	}
 	else
 		return (0);
 }

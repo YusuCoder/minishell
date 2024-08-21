@@ -6,13 +6,13 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:18:32 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:18:34 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/18 19:20:49 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_cmd	*list_get_last(t_cmd *head)
+t_cmd	*cmd_list_last(t_cmd *head)
 {
 	t_cmd	*last;
 
@@ -26,20 +26,20 @@ t_cmd	*list_get_last(t_cmd *head)
 	return (last);
 }
 
-void	list_add_new(t_cmd **head, t_cmd *new)
+void	cmd_list_add(t_cmd *head, t_cmd *new)
 {
 	t_cmd	*current;
 
-	if (head == NULL)
-		*head = new;
+	if (head == NULL || new == NULL)
+		return ;
 	else
 	{
-		current = list_get_last(*head);
+		current = cmd_list_last(head);
 		current->next = new;
 	}
 }
 
-int	list_len(t_cmd *head)
+int	cmd_list_len(t_cmd *head)
 {
 	int		length;
 	t_cmd	*current;

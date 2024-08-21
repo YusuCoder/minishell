@@ -6,11 +6,11 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:09:08 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:09:12 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:28:55 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	set_pipe_fd(t_cmd *cmd)
 {
@@ -24,8 +24,8 @@ int	set_pipe_fd(t_cmd *cmd)
 	}
 	else
 	{
-		cmd->pipe_fd[0] = STDIN_FILENO;
-		cmd->pipe_fd[1] = STDOUT_FILENO;
+		cmd->pipe_fd[0] = -1;
+		cmd->pipe_fd[1] = -1;
 	}
 	return (0);
 }

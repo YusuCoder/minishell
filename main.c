@@ -20,10 +20,11 @@ char	*read_line(char *line)
 		if (*cwd == '/')
 			cwd++;
 	}
-	printf(RED"~/%s $\n"RESET, cwd);
-	line = readline(GREEN">>> "RESET);
+	printf(CYAN"~/%s $\n"RESET, cwd);
+	line = readline(MAGENTA">>> "RESET);
 	if (line && *line != '\0')
 		add_history(line);
+	// free(cwd);
 	return (line);
 }
 
@@ -73,6 +74,8 @@ int	main(int argc, char **argv, char **envp)
 		line = read_line(line);
 		if (!line)
 			break ;
+		// expand_heredoc(&line, data.env, &data);
+		// printf("%s\n", line);
 		data.tokens = tokenizing(line);
 		int i = 0;
 		while (data.tokens && data.tokens[i] != NULL)
@@ -81,7 +84,8 @@ int	main(int argc, char **argv, char **envp)
 			{
 				expand(data.tokens, data.env, &data);
 				quote_handing(data.tokens);
- 				cmd_list_create(data.tokens, &data);
+ 				cmd_list_handler(&data);
+				redir_list_handler(&data);
 				execute(&data);
 			}
 			else

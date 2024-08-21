@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:19:39 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 17:03:54 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/18 16:46:27 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,6 @@ void	*my_realloc(void *ptr, int old_size, int new_size)
 	ft_memcpy(new_ptr, ptr, copy_size);
 	free(ptr);
 	return (new_ptr);
-}
-
-// Length of the 2D array
-int	array_len(char **array)
-{
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		i++;
-	}
-	return (i);
 }
 
 // Check if the character is a number
