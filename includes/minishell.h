@@ -281,16 +281,16 @@ void	cmd_array_handler(char **args, int *counter, char **cmd_array, \
 /*------------------------*/
 /*  Redirection handling  */
 /*------------------------*/
-int		redirection_handler(t_data *data, t_cmd *cmd);
+int		redirection_handler(t_cmd *cmd);
 int		redir_input_handler(t_redir *input_list);
 int		redir_output_handler(t_redir *output_list);
 
 /*--------------------*/
 /*  Heredoc handling  */
 /*--------------------*/
-int		heredoc_handler(t_data *data, t_redir *heredoc_list);
+int		heredoc_handler(t_redir *heredoc_list);
 int		eredoc_set_output_value(t_data *data, int pipe_fd[2], t_redir *redir);
-void	heredoc_child_process(t_data *data, int pipe_fd[2], t_redir *redir);
+void	heredoc_child_process(int pipe_fd[2], t_redir *redir);
 void	heredoc_parent_process(int pipe_fd[2]);
 
 /*-------------*/
