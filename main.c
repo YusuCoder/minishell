@@ -3,28 +3,17 @@
 
 char	*read_line(char *line)
 {
-	char	*cwd;
-	char	*home;
+	char	cwd[PATH_MAX];
 
-	cwd = NULL;
-	cwd = getcwd(cwd, 0);
-	if (line)
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		free(line);
-		line = NULL;
+		perror("getcwd");
+		return (NULL);
 	}
-	home = getenv("HOME");
-	if (home && ft_strncmp(cwd, home, ft_strlen(home)) == 0)
-	{
-		cwd += ft_strlen(home);
-		if (*cwd == '/')
-			cwd++;
-	}
-	printf(CYAN"~/%s $\n"RESET, cwd);
-	line = readline(MAGENTA">>> "RESET);
+	printf(CYAN"%s $\n"RESET, cwd);
+	line = readline(">>> ");
 	if (line && *line != '\0')
 		add_history(line);
-	// free(cwd);
 	return (line);
 }
 
@@ -68,9 +57,9 @@ int	main(int argc, char **argv, char **envp)
 	exit_code = 0;
 	_init_terminal();
 	set_data(&data, envp, &exit_code);
-	while(1)
+	while (1)
 	{
-		_handle_signals(INIT);
+		_handle_signals(RES, &data);
 		line = read_line(line);
 		if (!line)
 			break ;
@@ -83,19 +72,16 @@ int	main(int argc, char **argv, char **envp)
 			if (!parse(data.tokens, &data) && data.tokens)
 			{
 				expand(data.tokens, data.env, &data);
-				quote_handing(data.tokens);
  				cmd_list_handler(&data);
 				redir_list_handler(&data);
+				quote_handing(data.cmd_list);
 				execute(&data);
 			}
 			else
-			{
-				free_array(data.tokens);
-				break;
-			}
+				break ;
 			i++;
 		}
 	}
-	return (exit_code);
+	free_exit(&data, exit_code);
 }
 

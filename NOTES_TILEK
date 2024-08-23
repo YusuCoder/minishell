@@ -23,3 +23,33 @@ cd ---> handle different error messages
 
 ==================================================================
 
+
+>>> echo '$HOME'"$USER$daasd?" | echo $HOME > file1
+
+==387== HEAP SUMMARY:
+==387==     in use at exit: 232,935 bytes in 263 blocks
+==387==   total heap usage: 685 allocs, 422 frees, 252,205 bytes allocated
+==387==
+==387== 11 bytes in 1 blocks are definitely lost in loss record 14 of 90
+==387==    at 0x48407B4: malloc (vg_replace_malloc.c:381)
+==387==    by 0x10AEB9: remove_var (expanding_1.c:94)
+==387==    by 0x10B02A: dollar_sign (expanding_1.c:124)
+==387==    by 0x10AB18: expand (expanding.c:136)
+==387==    by 0x109571: main (main.c:72)
+==387==
+==387== 16 bytes in 2 blocks are definitely lost in loss record 17 of 90
+==387==    at 0x48407B4: malloc (vg_replace_malloc.c:381)
+==387==    by 0x109D43: take_tokens (t_add_tokens.c:116)
+==387==    by 0x109937: tokenizing (t_tokenize.c:64)
+==387==    by 0x10952D: main (main.c:66)
+==387==
+==387== LEAK SUMMARY:
+==387==    definitely lost: 27 bytes in 3 blocks
+==387==    indirectly lost: 0 bytes in 0 blocks
+==387==      possibly lost: 0 bytes in 0 blocks
+==387==    still reachable: 0 bytes in 0 blocks
+==387==         suppressed: 232,908 bytes in 260 blocks
+==387==
+==387== For lists of detected and suppressed errors, rerun with: -s
+==387== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 1 from 1)
+

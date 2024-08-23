@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 20:17:20 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/21 21:32:30 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/23 23:53:10 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,79 @@ int	is_exeption(char c)
 int	still_dollar_sign_there(char *token)
 {
 	int	i;
+	int	in_single_quote;
 	int	check;
 
 	i = 0;
 	check = 0;
+	in_single_quote = 0;
 	while (token[i])
 	{
-		if (token[i] == '$')
-			check = check + not_in_squote(token, i);
+		if (token[i] == '\'')
+		{
+			in_single_quote = !in_single_quote;
+			i++;
+			continue ;
+		}
+		if (token[i] == '$' && !in_single_quote && token[i + 1] != '\0')
+		{
+			check++;
+		}
 		i++;
 	}
-	if (check > 0)
-		return (1);
-	else
-		return (0);
+	return (check > 0);
 }
+
+// int	still_dollar_sign_there(char *token)
+// {
+// 	int	i;
+// 	int	in_single_quote;
+// 	int	check;
+
+// 	i = 0;
+// 	check = 0;
+// 	in_single_quote = 0;
+// 	while (token[i])
+// 	{
+// 		if (token[i] == '\'')
+// 			in_single_quote = !in_single_quote;
+// 		if (token[i] == '$' && token[i + 1] == '\0')
+// 		{
+// 			// If $ is at the end, it's not a valid expansion case, return 0
+// 			token[i] = '\0';
+// 			return (0);
+// 		}
+// 		if (token[i] == '$' && !in_single_quote && token[i + 1] != '\0')
+// 			check++;
+// 		i++;
+// 	}
+// 	return (check > 0);
+// }
+
+// int	still_dollar_sign_there(char *token)
+// {
+// 	int	i;
+// 	int	in_single_quote;
+// 	int	check;
+
+// 	i = 0;
+// 	check = 0;
+// 	in_single_quote = 0;
+// 	while (token[i])
+// 	{
+// 		if (token[i] == '\'')
+// 			in_single_quote = !in_single_quote;
+// 		if (token[i] == '$' && token[i + 1] == '\0')
+// 		{
+// 			token[i] = '\0';
+// 			break;
+// 		}
+// 		if (token[i] == '$' && !in_single_quote && token[i + 1] != '\0')
+// 			check++;
+// 		i++;
+// 	}
+// 	return (check > 0);
+// }
 
 int	calculate_new_length(const char *var, const char *exit_code_str)
 {

@@ -6,28 +6,33 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:09:08 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/20 16:28:55 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/23 20:55:23 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	set_pipe_fd(t_cmd *cmd)
+void	fork_external(t_data *data, t_cmd *cmd)
 {
-	if (cmd->next != NULL)
+	pid_t	pid;
+	int		exit_status;
+
+	pid = fork();
+	if (pid == 0)
 	{
-		if (pipe(cmd->pipe_fd) == -1)
-		{
-			perror("pipe");
-			return (-1);
-		}
+		execute_external(data, cmd);
+		free_exit(data, *data->exit_code);
+	}
+	else if (pid > 0)
+	{
+		waitpid(pid, &exit_status, 0);
+		if (WIFEXITED(exit_status))
+			*data->exit_code = WEXITSTATUS(exit_status);
+		else if (WIFSIGNALED(exit_status))
+			*data->exit_code = WTERMSIG(exit_status) + 128;
 	}
 	else
-	{
-		cmd->pipe_fd[0] = -1;
-		cmd->pipe_fd[1] = -1;
-	}
-	return (0);
+		free_error_exit(data, 1, "fork");
 }
 
 char	*set_cmd_path(char *str)

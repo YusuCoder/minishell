@@ -33,11 +33,11 @@ SRC_FILES	:= ./p_srcs/signals.c\
 				./e_srcs/environment/env_value.c \
 				./e_srcs/custom_functions/custom_functions.c \
 				./e_srcs/environment/env_var.c \
-				./e_srcs/command_list/command_list_utils.c \
-				./e_srcs/command_list/command_list.c \
-				./e_srcs/redirection_list/redirection_checker.c \
-				./e_srcs/redirection_list/redirection_list_utils.c \
-				./e_srcs/redirection_list/redirection_list.c \
+				./e_srcs/list_handler/command_list_utils.c \
+				./e_srcs/list_handler/command_list.c \
+				./e_srcs/list_handler/redirection_checker.c \
+				./e_srcs/list_handler/redirection_list_utils.c \
+				./e_srcs/list_handler/redirection_list.c \
 				./e_srcs/builtins/builtin_checker.c \
 				./e_srcs/builtins/cd.c \
 				./e_srcs/builtins/echo.c \

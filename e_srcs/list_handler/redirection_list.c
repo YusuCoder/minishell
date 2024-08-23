@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 15:55:15 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/20 11:07:01 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/23 21:07:31 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,11 @@ int	redir_list_create(t_type type, t_cmd *cmd, int index)
 	else if (type == INPUT)
 		result = new_redir(&cmd->input_list, &cmd->is_redir_input, name, INPUT);
 	else if (type == APPEND)
-		result = new_redir(&cmd->output_list, &cmd->is_redir_output, name, APPEND);
+		result = new_redir(&cmd->output_list, &cmd->is_redir_output, name, \
+							APPEND);
 	else if (type == OUTPUT)
-		result = new_redir(&cmd->output_list, &cmd->is_redir_output, name, OUTPUT);
+		result = new_redir(&cmd->output_list, &cmd->is_redir_output, name, \
+							OUTPUT);
 	if (result == -1)
 		return (-1);
 	if (name == NULL)

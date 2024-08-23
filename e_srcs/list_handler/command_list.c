@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_list.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:17:37 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/20 09:09:17 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/23 21:55:33 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,10 @@ int	cmd_list_add_new(t_cmd **head, char **tokens, int len, int index)
 	new_cmd->cmd_array = NULL;
 	new_cmd->next = NULL;
 	if (*head == NULL)
+	{
+		new_cmd->index = 0;
 		*head = new_cmd;
+	}
 	else
 		cmd_list_add(*head, new_cmd);
 	return (0);

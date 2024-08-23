@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:25:43 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:25:45 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/21 12:51:13 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // Check if the argument equals to "cd" (case-insensitive)
 int	is_cd(char *arg)
 {
-	if (ft_strlen(arg) != 2)
+	if (arg == NULL || ft_strlen(arg) != 2)
 		return (0);
 	else
 	{
@@ -30,7 +30,7 @@ int	is_cd(char *arg)
 // Check if the argument equals to "pwd" (case-insensitive)
 int	is_pwd(char *arg)
 {
-	if (ft_strlen(arg) != 3)
+	if (arg == NULL || ft_strlen(arg) != 3)
 		return (0);
 	else
 	{
@@ -47,7 +47,7 @@ int	is_pwd(char *arg)
 // Check if the argument equals to "env" (case-insensitive)
 int	is_env(char *arg)
 {
-	if (ft_strlen(arg) != 3)
+	if (arg == NULL || ft_strlen(arg) != 3)
 		return (0);
 	else
 	{
@@ -64,7 +64,7 @@ int	is_env(char *arg)
 // Check if the argument equals to "echo" (case-insensitive)
 int	is_echo(char *arg)
 {
-	if (ft_strlen(arg) != 4)
+	if (arg == NULL || ft_strlen(arg) != 4)
 		return (0);
 	else
 	{
@@ -83,7 +83,9 @@ int	is_echo(char *arg)
 // Check if the argument is one of the builtin commands
 int	is_builtin(char *arg)
 {
-	if (is_cd(arg))
+	if (arg == NULL)
+		return (0);
+	else if (is_cd(arg))
 		return (1);
 	else if (is_pwd(arg))
 		return (1);

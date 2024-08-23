@@ -6,71 +6,87 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:03:24 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/20 16:28:53 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/23 20:39:01 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	run_child_process(t_data *data, t_cmd *cmd, int *prev_fd)
+void	wait_processes(pid_t last_pid, int *last_exit_code)
 {
-	if (*prev_fd != -1)
-	{
-		if (dup2(*prev_fd, STDIN_FILENO) == -1)
-			free_error_exit(data, *data->exit_code, "dup2");
-		close(*prev_fd);
-	}
-	if (cmd->pipe_fd[1] != -1)
-	{
-		if (dup2(cmd->pipe_fd[1], STDOUT_FILENO) == -1)
-			free_error_exit(data, *data->exit_code, "dup2");
-		close(cmd->pipe_fd[1]);
-	}
-	if (cmd->pipe_fd[0] != -1)
-		close(cmd->pipe_fd[0]);
-	// if (handle_redirection(cmd) == -1)
-	// 	free_exit(data, *data->exit_code);
-	execute_single_command(data, cmd);
-	free_exit(data, *data->exit_code);
-}
+	pid_t	pid;
+	int		exit_status;
 
-void	run_parent_process(t_cmd *cmd, int *prev_fd)
-{
-	wait(NULL);
-	if (*prev_fd != -1)
+	while ((pid = wait(&exit_status)) > 0)
 	{
-		close(*prev_fd);
-		*prev_fd = -1;
-	}
-	if (cmd->pipe_fd[0] != -1)
-	{
-		*prev_fd = cmd->pipe_fd[0];
-		close(cmd->pipe_fd[1]);
+		if (pid == last_pid)
+		{
+			if (WIFEXITED(exit_status))
+				*last_exit_code = WEXITSTATUS(exit_status);
+			else if (WIFSIGNALED(exit_status))
+				*last_exit_code = WTERMSIG(exit_status) + 128;
+		}
 	}
 }
 
-// ls "-"l
+void	pipe_close_all(t_cmd *cmd_list)
+{
+	t_cmd	*current;
 
-// parser:
-// string
+	current = cmd_list;
+	while (current)
+	{
+		if (current->pipe_fd[0] != -1)
+			close(current->pipe_fd[0]);
+		if (current->pipe_fd[1] != -1)
+			close(current->pipe_fd[1]);
+		current = current->next;
+	}
+}
 
-// s t r i n g
-// if character = "" then read until next "" -> save type of "" as info then delete if not nested ""
-// if character = '' then read until next '' -> save type of '' as info then delete if not nested ''
-// if character = $ then if next after = ' ' then -> print $
-// 						or if next after = alphanumeric then -> expand
-// 						or if next after = ? then status_code insert here
-// if character = alphanumeric as long as no space -> make tok until space
-// if character = >> << < > then handle as needed
-// if character = | start new command
+void	pipe_redirection_handler(t_data *data, t_cmd *curr_cmd)
+{
+	int		prev_index;
+	t_cmd	*cmd_list;
+	t_cmd	*prev_cmd;
 
-// after each new token check if previous token was the same type or same expanderfeature and no space between
-// if yes, write together.
+	cmd_list = data->cmd_list;
+	prev_index = curr_cmd->index - 1;
+	prev_cmd = cmd_list_find(cmd_list, prev_index);
+	if (prev_cmd != NULL)
+	{
+		if (dup2(prev_cmd->pipe_fd[0], STDIN_FILENO) == -1)
+			free_error_exit(data, *data->exit_code, "dup2");
+	}
+	if (curr_cmd->next != NULL)
+	{
+		if (dup2(curr_cmd->pipe_fd[1], STDOUT_FILENO) == -1)
+			free_error_exit(data, *data->exit_code, "dup2");
+	}
+	pipe_close_all(cmd_list);
+}
 
-// "hello"$world$stuff$echo'lol'
+int	pipe_set_all(t_cmd *cmd_list)
+{
+	t_cmd	*current;
 
-// ->helloexpandedvalofworldexpandedvalueofstuffexpandedvalueofecholol
-
-// for example export E=e C=c H=h O=o $E$C$H$O becomes echo
-
-// so $h$o both are expandable
+	current = cmd_list;
+	while (current)
+	{
+		if (current->next == NULL)
+		{
+			current->pipe_fd[0] = -1;
+			current->pipe_fd[1] = -1;
+		}
+		else
+		{
+			if (pipe(current->pipe_fd) == -1)
+			{
+				perror("pipe");
+				return (-1);
+			}
+		}
+		current = current->next;
+	}
+	return (0);
+}

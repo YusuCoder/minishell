@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:25:09 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/18 18:53:23 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/23 21:15:14 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ void	ft_perror(char *msg1, char *arg, char *msg2)
 
 void	ft_perror_parsing(char *msg1, char *msg2, char *arg, int *exit_code)
 {
-	char backtrick = 96;
+	char	backtrick;
 
+	backtrick = 96;
 	write(2, msg1, ft_strlen(msg1));
 	if (msg2 != NULL)
 		write(2, msg2, ft_strlen(msg2));

@@ -6,13 +6,13 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:33:40 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/20 16:30:07 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/23 21:17:39 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	redir_input_handler(t_redir *input_list)
+int	redir_input_handler(t_redir *input_list, int *exit_code)
 {
 	t_redir	*current;
 	int		fd;
@@ -23,8 +23,9 @@ int	redir_input_handler(t_redir *input_list)
 		fd = open(current->name, O_RDONLY);
 		if (fd == -1)
 		{
-			ft_perror("minishell: ", current->name, ": No such file or directory");
-			// exit_code = 1;
+			ft_perror("minishell: ", current->name, \
+						": No such file or directory");
+			*exit_code = 1;
 			return (-1);
 		}
 		if (dup2(fd, STDIN_FILENO) == -1)
@@ -68,16 +69,11 @@ int	redir_output_handler(t_redir *output_list)
 	return (0);
 }
 
-int	redirection_handler(t_cmd *cmd)
+int	redirection_handler(t_cmd *cmd, int *exit_code)
 {
-	if (cmd->is_heredoc && cmd->heredoc_list)
-	{
-		if (heredoc_handler(cmd->heredoc_list) == -1)
-			return (-1);
-	}
 	if (cmd->is_redir_input && cmd->input_list)
 	{
-		if (redir_input_handler(cmd->input_list) == -1)
+		if (redir_input_handler(cmd->input_list, exit_code) == -1)
 			return (-1);
 	}
 	if (cmd->is_redir_output && cmd->output_list)

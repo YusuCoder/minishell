@@ -6,11 +6,28 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 21:28:16 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/21 21:29:04 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/23 14:47:29 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+// Checks if the character at index i is inside double quotes
+static int	is_in_double_quotes(char *token, int i)
+{
+	int	dbl_quote_count;
+	int	j;
+
+	dbl_quote_count = 0;
+	j = 0;
+	while (j < i)
+	{
+		if (token[j] == '\"')
+			dbl_quote_count++;
+		j++;
+	}
+	return (dbl_quote_count % 2 != 0);
+}
 
 static int	check_left_quote(char *token, int i)
 {
@@ -19,7 +36,7 @@ static int	check_left_quote(char *token, int i)
 	left = 0;
 	while (i >= 0)
 	{
-		if (token[i] == '\'')
+		if (token[i] == '\'' && !is_in_double_quotes(token, i))
 		{
 			left = 1;
 			break ;
@@ -36,7 +53,7 @@ static int	check_right_quote(char *token, int i)
 	right = 0;
 	while (token[i])
 	{
-		if (token[i] == '\'')
+		if (token[i] == '\'' && !is_in_double_quotes(token, i))
 		{
 			right = 1;
 			break ;

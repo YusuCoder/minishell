@@ -6,23 +6,11 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:05:44 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/20 21:05:55 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/23 20:30:26 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-int	is_builtin_cmd_only(t_data *data)
-{
-	if (data->cmd_num == 1
-		&& is_builtin(data->cmd_list->cmd_array[0])
-		&& data->cmd_list->is_heredoc == 0
-		&& data->cmd_list->is_redir_input == 0
-		&& data->cmd_list->is_redir_output == 0)
-		return (1);
-	else
-		return (0);
-}
 
 int	is_executable(char *cmd_path)
 {

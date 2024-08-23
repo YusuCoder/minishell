@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 19:25:39 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/20 20:21:28 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/23 21:45:08 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ int	parse_redirs(char *current, char *next)
 	if ((ft_strncmp(current, "<", 1) == 0) && (ft_strncmp(next, ">", 1) == 0))
 		return (-1);
 	if ((ft_strncmp(current, ">", 1) == 0) && (ft_strncmp(next, "<", 1) == 0))
+		return (-1);
+	if ((ft_strncmp(current, "<", 1) == 0) && (ft_strncmp(next, "|", 1) == 0))
+		return (-1);
+	if ((ft_strncmp(current, ">", 1) == 0) && (ft_strncmp(next, "|", 1) == 0))
 		return (-1);
 	return (0);
 }

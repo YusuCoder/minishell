@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:25:36 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/20 09:48:13 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/21 12:39:10 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,12 @@ int	set_cmd_array(t_cmd *cmd)
 	cmd_counter = 0;
 	cmd_array_handler(cmd->args, &cmd_counter, NULL, COUNT);
 	if (cmd_counter == 0)
-		cmd->cmd_array = NULL;
+	{
+		cmd->cmd_array = (char **)malloc(sizeof(char *));
+		if (cmd->cmd_array == NULL)
+			return (perror("malloc"), -1);
+		cmd->cmd_array[0] = NULL;
+	}
 	else
 	{
 		cmd->cmd_array = (char **)malloc((cmd_counter + 1) * sizeof(char *));

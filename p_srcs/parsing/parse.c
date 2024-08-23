@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:27:31 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/20 20:21:35 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/23 21:43:43 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,44 +15,6 @@
 	This function counts number of single or double quotes
 	if number of any of them is odd that means that quote is not closed
 */
-
-// int	quotes_check(char *t)
-// {
-// 	int	i;
-// 	int	squote;
-// 	int	dquote;
-// 	int	in_single_quote;
-// 	int	in_double_quote;
-
-// 	i = 0;
-// 	squote = 0;
-// 	dquote = 0;
-// 	in_single_quote = 0;
-// 	in_double_quote = 0;
-// 	while (t[i])
-// 	{
-// 		if (t[i] == '\'' && !in_double_quote)
-// 		{
-// 			if (in_single_quote)
-// 				in_single_quote = 0;
-// 			else
-// 				in_single_quote = 1;
-// 			squote++;
-// 		}
-// 		if (t[i] == '\"' && !in_single_quote)
-// 		{
-// 			if (in_double_quote)
-// 				in_double_quote = 0;
-// 			else
-// 				in_double_quote = 1;
-// 			dquote++;
-// 		}
-// 		i++;
-// 	}
-// 	if (squote % 2 != 0 || dquote % 2 != 0)
-// 		return (-1);
-// 	return (0);
-// }
 
 int	check_quotes(char *token, t_data *data)
 {
