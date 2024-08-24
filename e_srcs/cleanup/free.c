@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:25:21 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/22 19:49:56 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/24 14:34:04 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,10 @@ void	free_cmd_list(t_cmd **head)
 	{
 		free_array(current->args);
 		free_array(current->cmd_array);
-		free_redir_list(&current->heredoc_list);
 		free_redir_list(&current->input_list);
 		free_redir_list(&current->output_list);
+		if (current->heredoc_input != NULL)
+			free(current->heredoc_input);
 		next = current->next;
 		free(current);
 		current = next;

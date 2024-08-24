@@ -66,15 +66,18 @@ int	main(int argc, char **argv, char **envp)
 		// expand_heredoc(&line, data.env, &data);
 		// printf("%s\n", line);
 		data.tokens = tokenizing(line);
+		free(line);
 		int i = 0;
 		while (data.tokens && data.tokens[i] != NULL)
 		{
 			if (!parse(data.tokens, &data) && data.tokens)
 			{
-				expand(data.tokens, data.env, &data);
+				expand_heredoc(data.tokens, data.env, &data);
  				cmd_list_handler(&data);
 				redir_list_handler(&data);
 				quote_handing(data.cmd_list);
+				heredoc_handler(&data);
+				// expand_heredoc(&data.cmd_list->heredoc_input, data.env, &data);
 				execute(&data);
 			}
 			else

@@ -6,11 +6,27 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:25:36 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/21 12:39:10 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/24 14:25:31 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	redir_count(char **args)
+{
+	int	redir_counter;
+	int	i;
+
+	redir_counter = 0;
+	i = 0;
+	while (args[i])
+	{
+		if (is_redirection(args[i]))
+			redir_counter++;
+		i++;
+	}
+	return (redir_counter);
+}
 
 t_redir	*redir_list_last(t_redir *head)
 {

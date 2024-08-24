@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:17:37 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/23 21:55:33 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/24 17:35:28 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	cmd_list_add_new(t_cmd **head, char **tokens, int len, int index)
 	new_cmd->is_heredoc = 0;
 	new_cmd->is_redir_input = 0;
 	new_cmd->is_redir_output = 0;
-	new_cmd->heredoc_list = NULL;
+	new_cmd->heredoc_input = NULL;
 	new_cmd->input_list = NULL;
 	new_cmd->output_list = NULL;
 	new_cmd->cmd_array = NULL;

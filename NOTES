@@ -48,13 +48,4 @@ export T=">>"
 echo '$'$'$'$'$' = EXPANDING PROBLEM
 mkdir " " = should create an empty name folder
 
-echo 1 '|' asdfas  = should display all string
 
-
-SEGFAULT with > file4
-
-
-parsing in the exit (checking if is inside the int_max ??)
-
-
-echo hello > file2 > file1 | echo hello > file5 < sdfdsf

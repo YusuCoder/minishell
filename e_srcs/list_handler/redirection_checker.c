@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirection_check.c                                :+:      :+:    :+:   */
+/*   redirection_checker.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 18:29:03 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/18 18:43:34 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/23 22:34:00 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	is_heredoc(char *arg)
 {
-	if (ft_strncmp(arg, "<<", 2) == 0)
+	if (ft_strncmp(arg, "<<", 2) == 0
+		&& ft_strlen(arg) == 2)
 		return (1);
 	else
 		return (0);
@@ -22,7 +23,8 @@ int	is_heredoc(char *arg)
 
 int	is_redir_input(char *arg)
 {
-	if (ft_strncmp(arg, "<", 1) == 0)
+	if (ft_strncmp(arg, "<", 1) == 0
+		&& ft_strlen(arg) == 1)
 		return (1);
 	else
 		return (0);
@@ -30,7 +32,8 @@ int	is_redir_input(char *arg)
 
 int	is_redir_otput(char *arg)
 {
-	if (ft_strncmp(arg, ">", 1) == 0)
+	if (ft_strncmp(arg, ">", 1) == 0
+		&& ft_strlen(arg) == 1)
 		return (1);
 	else
 		return (0);
@@ -38,7 +41,8 @@ int	is_redir_otput(char *arg)
 
 int	is_redir_append(char *arg)
 {
-	if (ft_strncmp(arg, ">>", 2) == 0)
+	if (ft_strncmp(arg, ">>", 2) == 0
+		&& ft_strlen(arg) == 2)
 		return (1);
 	else
 		return (0);
