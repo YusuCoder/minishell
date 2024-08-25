@@ -49,3 +49,6 @@ echo '$'$'$'$'$' = EXPANDING PROBLEM
 mkdir " " = should create an empty name folder
 
 
+
+
+cd ~/Desktop/

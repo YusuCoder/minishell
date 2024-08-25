@@ -1,8 +1,9 @@
+--- V Fixed ---
 bash-3.2$ echo "ascd        ads"
 ascd        ads
 
 ==================================================================
-
+--- V Fixed ---
 execution ---> handle free and exit
 
 ==================================================================
@@ -14,11 +15,11 @@ export and unset ---> check for valid input
 environment ---> handle $_ (underscore variable)
 
 ==================================================================
-
+--- V Fixed ---
 exit ---> handle free and exit
 
 ==================================================================
-
+--- V Fixed ---
 cd ---> handle different error messages
 
 ==================================================================

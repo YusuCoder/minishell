@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:54:19 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/20 20:21:41 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/25 22:32:19 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ of the token.
 Then allocating the memory for the tokens.
 at the end copying the token to the allocated memory
 */
-
 int	handle_variable_or_quoted_string(const char *str)
 {
 	char	quote;

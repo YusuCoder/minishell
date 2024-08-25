@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 16:36:26 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/25 00:17:48 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/25 18:06:14 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	heredoc_save_input(t_cmd *cmd, char *line)
 {
 	char	*temp;
 
+	if (cmd == NULL || line == NULL)
+		return (0);
 	if (cmd->heredoc_input == NULL)
 		cmd->heredoc_input = ft_strjoin(line, "\n");
 	else
@@ -34,17 +36,15 @@ int	heredoc_readline(t_cmd *cmd, char *delimiter, t_status status, char **env,
 {
 	char	*line;
 
+	signal(SIGINT, SIG_IGN);
 	while (1)
 	{
 		line = readline("> ");
 		if (line == NULL)
-			return (-1);
+			return (0);
 		expand_heredoc(&line, env, data);
 		if (ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
 			break ;
-		}
 		if (status == SAVE)
 		{
 			if (heredoc_save_input(cmd, line) == -1)

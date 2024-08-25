@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:09:08 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/23 20:55:23 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/24 23:42:11 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,14 @@ void	print_wrong_path(char *arg, int *exit_code)
 {
 	ft_perror("minishell: ", arg, ": No such file or directory");
 	*exit_code = 127;
+}
+
+void	set_origin_fd(t_data *data)
+{
+	if (dup2(data->fd_stdin, STDIN_FILENO) == -1)
+		free_exit(data, 1);
+	close(data->fd_stdin);
+	if (dup2(data->fd_stdout, STDOUT_FILENO) == -1)
+		free_exit(data, 1);
+	close(data->fd_stdout);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 19:20:07 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/23 21:17:38 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/25 13:58:32 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,16 @@ void	execute_single_command(t_data *data, t_cmd *cmd, t_status status)
 	{
 		if (redirection_handler(cmd, data->exit_code) == -1)
 			free_exit(data, 1);
+		set_origin_fd(data);
 		return ;
 	}
 	else
 	{
 		if (is_builtin(cmd->cmd_array[0]))
+		{
 			execute_builtin(data, cmd);
+			set_origin_fd(data);
+		}
 		else
 		{
 			if (status == ONE)
@@ -117,7 +121,9 @@ void	execute_multiple_commands(t_data *data)
 
 void	execute(t_data *data)
 {
-	_handle_signals(CHILD_PROCESS, data);
+	data->fd_stdin = dup(STDIN_FILENO);
+	data->fd_stdout = dup(STDOUT_FILENO);
+	_handle_signals(CHILD_PROCESS);
 	if (data == NULL || data->cmd_list == NULL)
 		return ;
 	if (data->cmd_num == 1)

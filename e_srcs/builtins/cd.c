@@ -6,17 +6,23 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:49:51 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/14 12:37:25 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/25 13:40:27 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+// int	cd_error_catcher()
+// {
+
+// }
+
 int	change_directory(char *path, int *exit_code)
 {
+	// if (cd_error_catcher() )
 	if (chdir(path) != 0)
 	{
-		ft_perror("cd: no such file or directory: ", NULL, NULL);
+		ft_perror("minishell: cd: ", path, ": No such file or directory");
 		*exit_code = 1;
 		return (1);
 	}

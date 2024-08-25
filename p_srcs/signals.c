@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:28:22 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/23 23:04:09 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/25 18:16:51 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ void	_handle_child_signal(int signal)
 {
 	if (signal == SIGINT)
 	{
-		// write(1, "^C\n", 3);
+		return ;
 	}
 	if (signal == SIGQUIT)
 	{
-		// write(1, "^\\Quit: 3\n", 10);
+		return ;
 	}
 	return ;
 }
@@ -41,12 +41,10 @@ void	_handle_other_signals(int signal)
 	}
 }
 
-// Function to handle signals setup
-void	_handle_signals(t_process stats, t_data *data)
+void	_handle_signals(t_process stats)
 {
 	struct sigaction	sa;
 
-	(void)data;
 	if (stats == CHILD_PROCESS)
 	{
 		sa.sa_handler = &_handle_child_signal;
@@ -64,7 +62,7 @@ void	_handle_signals(t_process stats, t_data *data)
 		sa.sa_flags = 0;
 		if (sigaction(SIGINT, &sa, NULL) < 0)
 			return ;
-		if (signal(SIGQUIT, SIG_IGN))
+		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 			return ;
 	}
 }

@@ -2,23 +2,25 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-// # define RED "\x1b[31m"
-// # define GREEN "\x1b[32m"
-// # define YELLOW "\x1b[33m"
-// # define BLUE "\x1b[24m"
-// # define MAGENTA "\x1b[35m"
-// # define CYAN "\x1b[36m"
-// # define WHITE "\x1b[97m"
-// # define RESET "\x1b[0m"
+# define RED "\x1b[31m"
+# define GREEN "\x1b[32m"
+# define YELLOW "\x1b[33m"
+# define BLUE "\x1b[24m"
+# define MAGENTA "\x1b[35m"
+# define CYAN "\x1b[36m"
+# define WHITE "\x1b[97m"
+# define RESET "\x1b[0m"
 
-# define RED ""
-# define GREEN ""
-# define YELLOW ""
-# define BLUE ""
-# define MAGENTA ""
-# define CYAN ""
-# define WHITE ""
-# define RESET ""
+#define MAX_LINE_LENGTH 1024
+
+// # define RED ""
+// # define GREEN ""
+// # define YELLOW ""
+// # define BLUE ""
+// # define MAGENTA ""
+// # define CYAN ""
+// # define WHITE ""
+// # define RESET ""
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -40,6 +42,7 @@
 #define DQUOTE 34
 #define DEFAULT 0
 #define DOLLAR '$'
+#define MAX 100
 
 #ifndef TAB
 #define TAB 9
@@ -52,42 +55,6 @@
 #include "../libft/libft.h"
 
 typedef struct s_data t_data;
-
-/*---Struct for files and fd---*/
-typedef struct s_fd
-{
-	char	*file;
-	int		fd;
-}			t_fd;
-
-typedef struct s_sub_commands
-{
-	char	**sub_cmd_array; //avlue of arguments (commands) each sub-command has
-	int		sub_argc_count; //number of arguments (commands) each sub-command has
-	char	**arguments;
-	int		argc;
-	char	**argv;
-	t_fd	input_fd;
-	t_fd	output_fd;
-	t_fd	error_fd;
-	int		is_heredoc;
-	char	*is_delimeter;
-	int		append;
-	int		pid;
-}			t_sub_commands;
-
-/*---General command struct---*/
-typedef struct s_commands
-{
-	char			**tokens;
-	t_ryusupov		**env;
-	int			exit_code;
-	int				*pipe;
-	int				cmd_num; //number of commands separated with pipe
-	char			**envp;
-	char			**path;
-	t_sub_commands	*sub_command; //array of sub-commands seperated with pipes
-}					t_command;
 
 typedef enum s_status
 {
@@ -112,18 +79,19 @@ typedef struct s_redir
 	t_type			type;
 	char			*name;
 	struct s_redir	*next;
+	struct s_data	*data;
 }				t_redir;
 
 typedef struct s_cmd
 {
 	int				index;
 	char			**cmd_array;
-	char			**args;		//array of arguments of each command
-	int				args_num;	//number of arguments of each command
+	char			**args;
+	int				args_num;
 	int				pipe_fd[2];
-	int				is_heredoc;	// Flag indicating if heredoc is used
-	int				is_redir_input;	// Flag indicating if input redirection
-	int				is_redir_output;	// Flag indicating if output redirection
+	int				is_heredoc;
+	int				is_redir_input;
+	int				is_redir_output;
 	char			*heredoc_input;
 	t_redir			*input_list;
 	t_redir			*output_list;
@@ -133,10 +101,12 @@ typedef struct s_cmd
 /*---General program struct---*/
 typedef struct s_data
 {
+	int			fd_stdin;
+	int			fd_stdout;
 	char		**tokens;
 	char		**env;
-	int			cmd_num;	//number of commands separated with pipe
-	t_cmd		*cmd_list;	//list of commands seperated with pipes
+	int			cmd_num;
+	t_cmd		*cmd_list;
 	int			*exit_code;
 	int			heredoc_fd[2];
 	char		*last_arg;
@@ -144,66 +114,77 @@ typedef struct s_data
 
 typedef struct s_quote_state
 {
-	int		in_single_quote;
-	int		in_double_quote;
-	int		squote;
-	int		dquote;
-	int		i;
-	int		j;
-	int		found_quote;
+	int	 in_single_quote;
+	int	 in_double_quote;
+	int	 squote;
+	int	 dquote;
+	int	 i;
+	int	 j;
+	int	 found_quote;
 	char	quote_char;
 	char	*result;
-
-}   t_quote_state;
+}			t_quote_state;
 
 typedef enum s_process
 {
 	INIT,
 	RES,
 	CHILD_PROCESS,
+	HEREDOC_PROCESS,
 }			t_process;
 
 /*-----------SIGNALS----------*/
 void	_init_terminal(void);
-void	_handle_signals(t_process stats, t_data *data);
-void	determine_exit_code(int *exit_code);
+void	_handle_signals(t_process stats);
+
 /*--------Error messages---------*/
 void	_err_msg(char *msg, char err_code);
 void	_free_it(char **p);
 void	free_ptr(void *ptr);
 void	ft_perror_parsing(char *msg1, char *msg2, char *arg, int *exit_code);
+
 /*----------TOKENIZING-----------*/
 char	**tokenizing(const char *str);
-int 	take_tokens(char **token, const char *str, int i);
+int		take_tokens(char **token, const char *str, int i);
 int		matching_quotes(const char *str);
 int		count_words(const char *str, int i);
 int		count_tokens(char token);
 int		get_word_len(const char *str, int i);
 int		count_str(char c);
+
 /*-----------PARSING-------------*/
-int		parse(char	**t, t_data *exit_code);
+int		parse(char  **t, t_data *exit_code);
 int		check_beginning_and_end(char **t, int i);
 int		parse_redirs(char *current, char *next);
 int		count_str(char c);
 int		quotes_check(char *t);
 int		is_empty(const char *str);
+
 /*--------QUOTE HANDLING----------*/
+// char	*remove_single_quotes(char *token);
+void	find_quotes(char *token, int *start, int *end);
+char	*c_new_token(char *token, int start, int end);
+void 	count_and_find_quotes(char *token, int *start, int *end);
+char	*create_new_token(char *token, int start, int end);
+char	*remove_double_quotes(char *token);
 void	quote_handing(t_cmd *cmd_list);
-char 	*remove_last_quote(const char *token);
-void 	quote_handling_r(char **tokens);
+char	*remove_last_quote(const char *token);
+void	quote_handling_r(char **tokens);
+
 /*------------EXPANDING------------*/
-void 	expand(char **tokens, char **env, t_data *exit_code);
+void	expand(char **tokens, char **env, t_data *exit_code);
 int		not_in_squote(char *token, int i);
 int		is_exeption(char c);
 int		still_dollar_sign_there(char *token);
 char	*dollar_sign(char *sign, char *token,  char **env, t_data *data);
 char	*replace_question(const char *var, int *exit_code);
-char 	*replace_var(char *str, char *var, int i);
-char 	*remove_replace(char *str, char *var, int i);
+char	*replace_var(char *str, char *var, int i);
+char	*remove_replace(char *str, char *var, int i);
 char	*get_v_name(char *token);
 char	*get_e_name(char *v_name, char **env);
 char	*remove_var(char *token, char *v_name);
 char	*replace_token(char *token, char *e_name);
+
 /*------------EXPANDING HEREDOC-----------*/
 void	expand_heredoc(char **tokens, char **env, t_data *data);
 char	*get_v_name_heredoc(char *token);
@@ -213,14 +194,8 @@ int		still_dollar_heredoc(char *token);
 int		count_string_heredoc(char *token);
 char	*fill_e_name(char *line, int i);
 char	*get_c_string(char *token);
-char	*get_x_string(char	*token);
-int		count_string(char	*token);
-/*------------Sub command bouilding-------------*/
-// void	sub_cmds_array(t_command *cmd, char **tokens);
-// int		count_commands(char **tokens, t_command *cmd);
-// int		count_cmds(char	**token);
-// int		token_count(t_command *cmd, char **tokens, int i, int j);
-// int		build_cmds(char	**tokens, t_command *cmd);
+char	*get_x_string(char  *token);
+int		count_string(char   *token);
 
 /*--------------------*/
 /*  Custom finctions  */
@@ -286,7 +261,7 @@ int		redir_create(t_cmd *cmd, int index, t_type type);
 int		new_redir_handler(t_cmd *cmd, char *name, t_type type);
 int		new_redir_create(t_redir **redir_list, char *name, t_type type);
 void	redir_list_add(t_redir *head, t_redir *new);
-t_redir	*redir_list_last(t_redir *head);
+t_redir *redir_list_last(t_redir *head);
 int		set_cmd_array(t_cmd *cmd);
 void	cmd_array_handler(char **args, int *counter, char **cmd_array, \
 							t_status status);
@@ -327,6 +302,7 @@ int		is_executable(char *cmd_path);
 char	*set_cmd_path(char *str);
 void	print_wrong_command(char *arg, int *exit_code);
 void	print_wrong_path(char *arg, int *exit_code);
+void	set_origin_fd(t_data *data);
 
 /*--------------------*/
 /*  Builtin commands  */
@@ -359,8 +335,8 @@ void	execute_exit(t_data *data, char **args, int *exit_code);
 int		execute_export(char **args, char ***env, int *exit_code);
 int		export_no_args(char **env, int *exit_code);
 int		export_with_args(char *arg, char ***env, int *exit_code);
-int		export_arg_with_value(char *arg, char *equal_sign,
-			char ***env, int *exit_code);
+int		export_arg_with_value(char *arg, char *equal_sign, \
+								char ***env, int *exit_code);
 int		export_arg_no_value(char *arg, char ***env, int *exit_code);
 int		export_update_env(char ***env, const char *name, const char *value, int overwrite);
 

@@ -6,11 +6,11 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 16:41:07 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/23 23:02:28 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/25 21:14:14 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static void	handle_quotes(char *token, t_quote_state *state)
 {

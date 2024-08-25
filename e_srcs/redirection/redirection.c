@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:33:40 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/24 17:28:03 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/24 21:16:51 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ int	redir_input_heredoc(char *heredoc_input)
 {
 	int	pipe_fd[2];
 
+
+	if (heredoc_input == NULL)
+		return (0);
 	if (pipe(pipe_fd) == -1)
 	{
 		perror("pipe");

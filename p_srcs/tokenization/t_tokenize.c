@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 12:12:25 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/20 20:21:45 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/25 22:32:25 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,3 @@ char	**tokenizing(const char *str)
 	t[num_tokens] = NULL;
 	return (t);
 }
-
-// int	main(void)
-// {
-// 	const char	*str;
-// 	char		**tokens;
-// 	int			i;
-
-// 	str = "echo \"-\"l";
-// 	tokens = tokenizing(str);
-// 	if (tokens)
-// 	{
-// 		i = 0;
-// 		while (tokens[i])
-// 		{
-// 			printf("[ %s ]   ", tokens[i]);
-// 			i++;
-// 		}
-// 		free(tokens);
-// 	}
-// 	return (0);
-// }
