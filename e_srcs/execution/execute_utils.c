@@ -6,17 +6,34 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:09:08 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/24 23:42:11 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:19:49 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	update_underscore_var(t_data *data, char *value)
+{
+	char	*new_var;
+	int		index;
+
+	index = env_var_find(data->env, "_");
+	if (index == -1)
+	{
+		new_var = env_var_create("_", value);
+		if (env_var_add(&data->env, new_var) == -1)
+			free_exit(data, 1);
+	}
+	else
+		env_value_change(data->env, "_", value);
+}
 
 void	fork_external(t_data *data, t_cmd *cmd)
 {
 	pid_t	pid;
 	int		exit_status;
 
+	update_underscore_var(data, array_last(cmd->cmd_array));
 	pid = fork();
 	if (pid == 0)
 	{
@@ -59,14 +76,4 @@ void	print_wrong_path(char *arg, int *exit_code)
 {
 	ft_perror("minishell: ", arg, ": No such file or directory");
 	*exit_code = 127;
-}
-
-void	set_origin_fd(t_data *data)
-{
-	if (dup2(data->fd_stdin, STDIN_FILENO) == -1)
-		free_exit(data, 1);
-	close(data->fd_stdin);
-	if (dup2(data->fd_stdout, STDOUT_FILENO) == -1)
-		free_exit(data, 1);
-	close(data->fd_stdout);
 }

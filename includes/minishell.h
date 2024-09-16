@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/26 17:33:37 by ryusupov          #+#    #+#             */
+/*   Updated: 2024/08/26 19:14:40 by ryusupov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -11,8 +22,6 @@
 # define WHITE "\x1b[97m"
 # define RESET "\x1b[0m"
 
-#define MAX_LINE_LENGTH 1024
-
 // # define RED ""
 // # define GREEN ""
 // # define YELLOW ""
@@ -22,39 +31,40 @@
 // # define WHITE ""
 // # define RESET ""
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <limits.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <string.h>
-#include <termios.h>
+# include <fcntl.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <limits.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <sys/wait.h>
+# include <signal.h>
+# include <string.h>
+# include <termios.h>
+# include <sys/stat.h>
 
-#define PIPE 124
-#define LESS 60
-#define GREATER 62
-#define AMP 38
-#define SQUOTE 39
-#define DQUOTE 34
-#define DEFAULT 0
-#define DOLLAR '$'
-#define MAX 100
+# define PIPE 124
+# define LESS 60
+# define GREATER 62
+# define AMP 38
+# define SQUOTE 39
+# define DQUOTE 34
+# define DEFAULT 0
+# define DOLLAR '$'
+# define MAX 100
 
-#ifndef TAB
-#define TAB 9
-#endif
+# ifndef TAB
+#  define TAB 9
+# endif
 
-#ifndef SPACE
-#define SPACE 32
-#endif
+# ifndef SPACE
+#  define SPACE 32
+# endif
 
-#include "../libft/libft.h"
+# include "../libft/libft.h"
 
-typedef struct s_data t_data;
+typedef struct s_data	t_data;
 
 typedef enum s_status
 {
@@ -79,7 +89,6 @@ typedef struct s_redir
 	t_type			type;
 	char			*name;
 	struct s_redir	*next;
-	struct s_data	*data;
 }				t_redir;
 
 typedef struct s_cmd
@@ -114,13 +123,13 @@ typedef struct s_data
 
 typedef struct s_quote_state
 {
-	int	 in_single_quote;
-	int	 in_double_quote;
-	int	 squote;
-	int	 dquote;
-	int	 i;
-	int	 j;
-	int	 found_quote;
+	int		in_single_quote;
+	int		in_double_quote;
+	int		squote;
+	int		dquote;
+	int		i;
+	int		j;
+	int		found_quote;
 	char	quote_char;
 	char	*result;
 }			t_quote_state;
@@ -130,12 +139,12 @@ typedef enum s_process
 	INIT,
 	RES,
 	CHILD_PROCESS,
-	HEREDOC_PROCESS,
 }			t_process;
 
 /*-----------SIGNALS----------*/
 void	_init_terminal(void);
 void	_handle_signals(t_process stats);
+void	determine_exit_code(int *exit_code);
 
 /*--------Error messages---------*/
 void	_err_msg(char *msg, char err_code);
@@ -153,7 +162,7 @@ int		get_word_len(const char *str, int i);
 int		count_str(char c);
 
 /*-----------PARSING-------------*/
-int		parse(char  **t, t_data *exit_code);
+int		parse(char **t, t_data *exit_code);
 int		check_beginning_and_end(char **t, int i);
 int		parse_redirs(char *current, char *next);
 int		count_str(char c);
@@ -161,12 +170,10 @@ int		quotes_check(char *t);
 int		is_empty(const char *str);
 
 /*--------QUOTE HANDLING----------*/
-// char	*remove_single_quotes(char *token);
-void	find_quotes(char *token, int *start, int *end);
-char	*c_new_token(char *token, int start, int end);
-void 	count_and_find_quotes(char *token, int *start, int *end);
+void	count_and_find_quotes(char *token, int *start, int *end);
 char	*create_new_token(char *token, int start, int end);
-char	*remove_double_quotes(char *token);
+char	*c_new_token(char *token, int start, int end);
+void	find_quotes(char *token, int *start, int *end);
 void	quote_handing(t_cmd *cmd_list);
 char	*remove_last_quote(const char *token);
 void	quote_handling_r(char **tokens);
@@ -176,7 +183,7 @@ void	expand(char **tokens, char **env, t_data *exit_code);
 int		not_in_squote(char *token, int i);
 int		is_exeption(char c);
 int		still_dollar_sign_there(char *token);
-char	*dollar_sign(char *sign, char *token,  char **env, t_data *data);
+char	*dollar_sign(char *sign, char *token, char **env, t_data *data);
 char	*replace_question(const char *var, int *exit_code);
 char	*replace_var(char *str, char *var, int i);
 char	*remove_replace(char *str, char *var, int i);
@@ -187,15 +194,13 @@ char	*replace_token(char *token, char *e_name);
 
 /*------------EXPANDING HEREDOC-----------*/
 void	expand_heredoc(char **tokens, char **env, t_data *data);
-char	*get_v_name_heredoc(char *token);
-char	*get_e_name_heredoc(char *v_name, char **env, char *original_v_name);
 char	*dollar_sign_heredoc(char *sign, char *token, char **env, t_data *data);
 int		still_dollar_heredoc(char *token);
 int		count_string_heredoc(char *token);
 char	*fill_e_name(char *line, int i);
 char	*get_c_string(char *token);
-char	*get_x_string(char  *token);
-int		count_string(char   *token);
+char	*get_x_string(char *token);
+int		count_string(char *token);
 
 /*--------------------*/
 /*  Custom finctions  */
@@ -222,7 +227,8 @@ int		env_var_remove(char ***env, int index);
 char	*env_value_get(char **env, const char *name);
 void	env_value_delete(char **env, char *name);
 void	env_value_change(char **env, const char *name, const char *value);
-int		env_value_change_pwd_oldpwd(char *prev_dir, char **env, int *exit_code);
+int		env_value_change_pwd_oldpwd(char *prev_dir, char ***env,
+			int *exit_code);
 char	**env_sort(char **env);
 void	quicksort(char **arr, int low, int high);
 int		partition(char **arr, int low, int high);
@@ -233,6 +239,7 @@ void	swap(char **a, char **b);
 /*------------------*/
 char	**array_copy(char **array);
 int		array_len(char **array);
+char	*array_last(char **array);
 
 /*-------------------------*/
 /*  Command list handling  */
@@ -261,7 +268,7 @@ int		redir_create(t_cmd *cmd, int index, t_type type);
 int		new_redir_handler(t_cmd *cmd, char *name, t_type type);
 int		new_redir_create(t_redir **redir_list, char *name, t_type type);
 void	redir_list_add(t_redir *head, t_redir *new);
-t_redir *redir_list_last(t_redir *head);
+t_redir	*redir_list_last(t_redir *head);
 int		set_cmd_array(t_cmd *cmd);
 void	cmd_array_handler(char **args, int *counter, char **cmd_array, \
 							t_status status);
@@ -270,7 +277,7 @@ void	cmd_array_handler(char **args, int *counter, char **cmd_array, \
 /*  Redirection handling  */
 /*------------------------*/
 int		redirection_handler(t_cmd *cmd, int *exit_code);
-int		redir_output_handler(t_redir *output_list);
+int		redir_output_handler(t_redir *output_list, int *exit_code);
 int		redir_input_handler(t_redir *input_list, char *heredoc_input, \
 							int *exit_code);
 int		redir_input_file(t_redir *redir, int *exit_code);
@@ -281,7 +288,8 @@ int		redir_input_heredoc(char *heredoc_input);
 /*--------------------*/
 void	heredoc_handler(t_data *data);
 void	heredoc_input_handler(t_data *data, t_cmd *cmd);
-int heredoc_readline(t_cmd *cmd, char *delimiter, t_status status, char **env, t_data *data);
+int		heredoc_readline(t_cmd *cmd, char *delimeter, t_status status,
+			t_data *data);
 int		heredoc_save_input(t_cmd *cmd, char *line);
 
 /*-------------*/
@@ -302,7 +310,9 @@ int		is_executable(char *cmd_path);
 char	*set_cmd_path(char *str);
 void	print_wrong_command(char *arg, int *exit_code);
 void	print_wrong_path(char *arg, int *exit_code);
+void	update_underscore_var(t_data *data, char *value);
 void	set_origin_fd(t_data *data);
+void	get_origin_fd(t_data *data);
 
 /*--------------------*/
 /*  Builtin commands  */
@@ -314,16 +324,18 @@ int		is_env(char *arg);
 int		is_echo(char *arg);
 
 /*---- cd command ----*/
-int		execute_cd(char **args, char **env, int *exit_code);
+int		execute_cd(char **args, char ***env, int *exit_code);
 int		cd_home_dir(char **env, int *exit_code);
 int		cd_dash_arg(char **env, int *exit_code);
 int		change_directory(char *path, int *exit_code);
+int		cd_error_catcher(char *path);
+int		cd_expand_tilde(char **path);
+char	*set_home(void);
 
 /*---- echo command ----*/
 int		execute_echo(char **args, int *exit_code);
 int		echo_skip_all_n(char **args, int *i);
 int		echo_is_all_n(char *arg);
-void	echo_print_arg(char *arg, int exit_code);
 
 /*---- env command ----*/
 int		execute_env(char **env, int *exit_code);
@@ -333,18 +345,21 @@ void	execute_exit(t_data *data, char **args, int *exit_code);
 
 /*---- export command ----*/
 int		execute_export(char **args, char ***env, int *exit_code);
+int		is_valid_export_value(char *arg);
 int		export_no_args(char **env, int *exit_code);
-int		export_with_args(char *arg, char ***env, int *exit_code);
-int		export_arg_with_value(char *arg, char *equal_sign, \
-								char ***env, int *exit_code);
-int		export_arg_no_value(char *arg, char ***env, int *exit_code);
-int		export_update_env(char ***env, const char *name, const char *value, int overwrite);
+int		export_with_args(char *arg, char ***env);
+int		export_arg_with_value(char *arg, char *equal_sign, char ***env);
+int		export_arg_no_value(char *arg, char ***env);
+int		export_update_env(char ***env, const char *name, const char *value,
+			int overwrite);
 
 /*---- pwd command ----*/
 int		execute_pwd(int *exit_code);
 
 /*---- unset command ----*/
 int		execute_unset(char **args, char ***env, int *exit_code);
+int		is_valid_unset_value(char *arg);
+int		unset_var_from_env(char *arg, char ***env);
 
 /*---------------------*/
 /*  Cleanup functions  */

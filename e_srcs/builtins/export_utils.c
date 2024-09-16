@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:26:05 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:26:07 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/25 20:00:33 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,32 @@ int	export_update_env(char ***env, const char *name, const char *value,
 		return (0);
 	}
 	return (env_var_add(env, new_env_var));
+}
+
+// Check for valid input for export command
+int	is_valid_export_value(char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (arg == NULL)
+	{
+		ft_perror("minishell: export: `': not a valid identifier", NULL, NULL);
+		return (0);
+	}
+	if (!ft_isalpha(arg[0]) && arg[0] != '_')
+	{
+		ft_perror("minishell: export: `", arg, "': not a valid identifier");
+		return (0);
+	}
+	while (arg[i] && arg[i] != '=')
+	{
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+		{
+			ft_perror("minishell: export: `", arg, "': not a valid identifier");
+			return (0);
+		}
+		i++;
+	}
+	return (1);
 }

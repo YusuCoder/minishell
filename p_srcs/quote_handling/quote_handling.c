@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 16:41:07 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/25 21:14:14 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:14:09 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,16 @@ void	quote_handing(t_cmd *cmd_list)
 	while (current_cmd)
 	{
 		i = -1;
-		while (current_cmd->cmd_array[++i])
+		while (current_cmd->args[++i])
 		{
-			if (ft_strchr(current_cmd->cmd_array[i], '\"')
-				|| ft_strchr(current_cmd->cmd_array[i], '\''))
+			if (ft_strchr(current_cmd->args[i], '\"')
+				|| ft_strchr(current_cmd->args[i], '\''))
 			{
-				new_cmd = remove_quotes(current_cmd->cmd_array[i]);
+				new_cmd = remove_quotes(current_cmd->args[i]);
 				if (new_cmd)
 				{
-					free(current_cmd->cmd_array[i]);
-					current_cmd->cmd_array[i] = new_cmd;
+					free(current_cmd->args[i]);
+					current_cmd->args[i] = new_cmd;
 				}
 				else
 					printf("Error.\n");

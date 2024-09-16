@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:19:19 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:19:31 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:26:22 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ int	env_var_add(char ***env, char *new_env_var)
 	env_len = 0;
 	while ((*env)[env_len])
 		env_len++;
-	new_env = my_realloc(*env, (env_len + 1) * sizeof(char *),
-		(env_len + 2) * sizeof(char *));
+	new_env = my_realloc(*env, (env_len + 1) * sizeof(char *), \
+							(env_len + 2) * sizeof(char *));
 	if (!new_env)
 	{
 		free(new_env_var);
@@ -104,17 +104,17 @@ int	env_var_remove(char ***env, int index)
 	new_env = (char **)malloc(sizeof(char *) * len);
 	if (!new_env)
 		return (-1);
-	i = 0;
+	i = -1;
 	j = 0;
-	while (i < len)
+	while (++i < len)
 	{
 		if (i != index)
 		{
 			new_env[j] = (*env)[i];
 			j++;
 		}
-		else free((*env)[i]);
-		i++;
+		else
+			free((*env)[i]);
 	}
 	new_env[j] = NULL;
 	free(*env);

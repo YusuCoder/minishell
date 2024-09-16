@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:18:54 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:18:56 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 00:22:23 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	quicksort(char **arr, int low, int high)
 }
 
 // Sort environment variables in alphabetic order
-char **env_sort(char **env)
+char	**env_sort(char **env)
 {
 	char	**sorted_env;
 	int		len_env;

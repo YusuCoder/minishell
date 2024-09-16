@@ -42,6 +42,7 @@ SRC_FILES	:= ./p_srcs/signals.c\
 				./e_srcs/list_handler/redirection_list.c \
 				./e_srcs/builtins/builtin_checker.c \
 				./e_srcs/builtins/cd.c \
+				./e_srcs/builtins/cd_utils.c \
 				./e_srcs/builtins/echo.c \
 				./e_srcs/builtins/env.c \
 				./e_srcs/builtins/exit.c \
@@ -57,6 +58,7 @@ SRC_FILES	:= ./p_srcs/signals.c\
 				./e_srcs/execution/execute_utils.c \
 				./e_srcs/execution/execute_checker.c \
 				./e_srcs/execution/execute_process.c \
+				./e_srcs/execution/execute_fd_handler.c \
 				./e_srcs/execution/execute.c
 
 OBJS		:= $(patsubst %, $(OBJ_PATH)/%, $(SRC_FILES:.c=.o))
@@ -72,7 +74,8 @@ rl:
 
 #IF SUBMODULE IS NOT EXISTS IN THE REPO, FETCH AND UPDATE
 update:
-	@git submodule update --init --recursive
+	@git submodule update --init --recursive	> /dev/null 2>&1
+	@git submodule update --remote --merge	> /dev/null 2>&1
 
 #IF READLINE IS NOT INSTALLED INSTALL IT WITH MAKE LINUX (LINUX ONLY)
 linux: update readline_linux_install $(NAME)

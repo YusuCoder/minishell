@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:03:24 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/23 20:39:01 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 00:31:29 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	wait_processes(pid_t last_pid, int *last_exit_code)
 	pid_t	pid;
 	int		exit_status;
 
-	while ((pid = wait(&exit_status)) > 0)
+	pid = wait(&exit_status);
+	while (pid > 0)
 	{
 		if (pid == last_pid)
 		{
@@ -26,6 +27,7 @@ void	wait_processes(pid_t last_pid, int *last_exit_code)
 			else if (WIFSIGNALED(exit_status))
 				*last_exit_code = WTERMSIG(exit_status) + 128;
 		}
+		pid = wait(&exit_status);
 	}
 }
 

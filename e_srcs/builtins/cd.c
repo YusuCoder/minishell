@@ -3,31 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:49:51 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/25 13:40:27 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 19:12:22 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// int	cd_error_catcher()
-// {
-
-// }
-
 int	change_directory(char *path, int *exit_code)
 {
-	// if (cd_error_catcher() )
-	if (chdir(path) != 0)
+	if (ft_strncmp(path, "~", 1) == 0)
 	{
-		ft_perror("minishell: cd: ", path, ": No such file or directory");
-		*exit_code = 1;
-		return (1);
+		if (cd_expand_tilde(&path) == -1)
+		{
+			*exit_code = 1;
+			return (-1);
+		}
+		if (cd_error_catcher(path) == 0)
+		{
+			free(path);
+			*exit_code = 1;
+			return (0);
+		}
+		free(path);
+	}
+	else
+	{
+		if (cd_error_catcher(path) == 0)
+		{
+			*exit_code = 1;
+			return (0);
+		}
 	}
 	*exit_code = 0;
-	return (0);
+	return (1);
 }
 
 int	cd_home_dir(char **env, int *exit_code)
@@ -39,7 +50,7 @@ int	cd_home_dir(char **env, int *exit_code)
 	{
 		ft_perror("minishell: cd: HOME not set", NULL, NULL);
 		*exit_code = 1;
-		return (1);
+		return (0);
 	}
 	return (change_directory(home, exit_code));
 }
@@ -53,13 +64,13 @@ int	cd_dash_arg(char **env, int *exit_code)
 	{
 		ft_perror("minishell: cd: OLDPWD not set", NULL, NULL);
 		*exit_code = 1;
-		return (1);
+		return (0);
 	}
 	printf("%s\n", prev_dir);
 	return (change_directory(prev_dir, exit_code));
 }
 
-int	execute_cd(char **args, char **env, int *exit_code)
+int	execute_cd(char **args, char ***env, int *exit_code)
 {
 	char	curr_dir[PATH_MAX];
 	int		result;
@@ -71,13 +82,13 @@ int	execute_cd(char **args, char **env, int *exit_code)
 		*exit_code = 1;
 		return (-1);
 	}
-	if (!args[1] || strcmp(args[1], "~") == 0)
-		result = cd_home_dir(env, exit_code);
-	else if (strcmp(args[1], "-") == 0)
-		result = cd_dash_arg(env, exit_code);
+	if (array_len(args) == 1)
+		result = cd_home_dir(*env, exit_code);
+	else if (ft_strncmp(args[1], "-", 1) == 0 && ft_strlen(args[1]) == 1)
+		result = cd_dash_arg(*env, exit_code);
 	else
 		result = change_directory(args[1], exit_code);
-	if (result == 0)
+	if (result == 1)
 		return (env_value_change_pwd_oldpwd(curr_dir, env, exit_code));
 	else
 		return (result);

@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 19:20:07 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/25 13:58:32 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/26 19:10:36 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ void	execute_external(t_data *data, t_cmd *cmd)
 	char	*cmd_path;
 	int		result;
 
-	if (redirection_handler(cmd, data->exit_code) == -1)
-		free_exit(data, 1) ;
+	result = redirection_handler(cmd, data->exit_code);
+	if (result == -1)
+		free_exit(data, 1);
+	else if (result == 0)
+		return ;
 	cmd_name = cmd->cmd_array[0];
 	cmd_path = set_cmd_path(cmd_name);
 	result = is_accessable(cmd_name, &cmd_path, data->env);
@@ -46,7 +49,7 @@ void	execute_builtin(t_data *data, t_cmd *cmd)
 	if (redirection_handler(cmd, data->exit_code) == -1)
 		free_exit(data, 1);
 	if (is_cd(cmd->cmd_array[0]))
-		result = execute_cd(cmd->cmd_array, data->env, data->exit_code);
+		result = execute_cd(cmd->cmd_array, &data->env, data->exit_code);
 	else if (is_pwd(cmd->cmd_array[0]))
 		result = execute_pwd(data->exit_code);
 	else if (is_env(cmd->cmd_array[0]))
@@ -71,6 +74,7 @@ void	execute_single_command(t_data *data, t_cmd *cmd, t_status status)
 	{
 		if (redirection_handler(cmd, data->exit_code) == -1)
 			free_exit(data, 1);
+		update_underscore_var(data, "");
 		set_origin_fd(data);
 		return ;
 	}
@@ -78,6 +82,7 @@ void	execute_single_command(t_data *data, t_cmd *cmd, t_status status)
 	{
 		if (is_builtin(cmd->cmd_array[0]))
 		{
+			update_underscore_var(data, array_last(cmd->cmd_array));
 			execute_builtin(data, cmd);
 			set_origin_fd(data);
 		}
@@ -117,12 +122,12 @@ void	execute_multiple_commands(t_data *data)
 	}
 	pipe_close_all(data->cmd_list);
 	wait_processes(last_pid, data->exit_code);
+	update_underscore_var(data, "");
 }
 
 void	execute(t_data *data)
 {
-	data->fd_stdin = dup(STDIN_FILENO);
-	data->fd_stdout = dup(STDOUT_FILENO);
+	get_origin_fd(data);
 	_handle_signals(CHILD_PROCESS);
 	if (data == NULL || data->cmd_list == NULL)
 		return ;

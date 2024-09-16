@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:27:31 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/23 21:43:43 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:52:13 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	parse(char **t, t_data *data)
 {
 	int	i;
 
+	if (t == NULL)
+		return (1);
 	i = 0;
 	if (t[i] == NULL)
 		return (1);

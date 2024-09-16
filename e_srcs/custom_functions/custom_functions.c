@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:19:39 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/18 16:46:27 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 00:19:58 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*my_strndup(const char *str, int len)
 
 	new_str = (char *)malloc(len + 1);
 	if (new_str == NULL)
-		return NULL;
+		return (NULL);
 	i = 0;
 	while (i < len)
 	{
@@ -99,17 +99,3 @@ char	*my_strjoin(const char *str1, const char *str2, const char *str3)
 	*ptr = '\0';
 	return (new_str);
 }
-
-// // Custom strcpy function
-// char *my_strcpy(char *dest, const char *src)
-// {
-// 	char *ptr;
-
-// 	ptr = dest;
-// 	while (*src)
-// 	{
-// 		*ptr++ = *src++;
-// 	}
-// 	*ptr = '\0';
-// 	return dest;
-// }

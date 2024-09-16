@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:45:53 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/18 17:05:15 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:17:28 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,17 @@ char	**array_copy(char **array)
 	}
 	new_array[i] = NULL;
 	return (new_array);
+}
+
+// Get the last argument from 2D array
+char	*array_last(char **array)
+{
+	int		len_array;
+	char	*last_arg;
+
+	if (array == NULL)
+		return (NULL);
+	len_array = array_len(array);
+	last_arg = array[len_array - 1];
+	return (last_arg);
 }

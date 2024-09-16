@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 16:36:26 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/25 18:06:14 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/30 14:14:46 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,34 +24,33 @@ int	heredoc_save_input(t_cmd *cmd, char *line)
 	{
 		temp = my_strjoin(cmd->heredoc_input, line, "\n");
 		if (temp == NULL)
-			return (-1);
+			free(cmd->heredoc_input);
 		free(cmd->heredoc_input);
 		cmd->heredoc_input = temp;
 	}
 	return (0);
 }
 
-int	heredoc_readline(t_cmd *cmd, char *delimiter, t_status status, char **env,
-		t_data *data)
+int	heredoc_readline(t_cmd *cmd, char *delimeter, t_status status, t_data *data)
 {
 	char	*line;
 
-	signal(SIGINT, SIG_IGN);
+	_handle_signals(INIT);
 	while (1)
 	{
 		line = readline("> ");
 		if (line == NULL)
-			return (0);
-		expand_heredoc(&line, env, data);
-		if (ft_strcmp(line, delimiter) == 0)
 			break ;
+		expand_heredoc(&line, data->env, data);
+		if (ft_strcmp(line, delimeter) == 0)
+		{
+			free(line);
+			break ;
+		}
 		if (status == SAVE)
 		{
 			if (heredoc_save_input(cmd, line) == -1)
-			{
-				free(line);
-				return (-1);
-			}
+				break ;
 		}
 		free(line);
 	}
@@ -71,14 +70,12 @@ void	heredoc_input_handler(t_data *data, t_cmd *cmd)
 			delimeter = current->name;
 			if (current->next != NULL)
 			{
-				if (heredoc_readline(cmd, delimeter, SKIP, data->env, data) ==
-					-1)
+				if (heredoc_readline(cmd, delimeter, SKIP, data) == -1)
 					free_exit(data, 1);
 			}
 			else
 			{
-				if (heredoc_readline(cmd, delimeter, SAVE, data->env, data) ==
-					-1)
+				if (heredoc_readline(cmd, delimeter, SAVE, data) == -1)
 					free_exit(data, 1);
 			}
 		}

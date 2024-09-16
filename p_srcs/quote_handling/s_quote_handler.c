@@ -6,7 +6,7 @@
 /*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 20:30:26 by ryusupov          #+#    #+#             */
-/*   Updated: 2024/08/25 22:04:18 by ryusupov         ###   ########.fr       */
+/*   Updated: 2024/08/26 23:27:13 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	count_leading_quotes(char *token)
 	int	count;
 
 	count = 0;
-	while (token[count] && token[count] == '\'')
+	while (token && token[count] && token[count] == '\'')
 	{
 		count++;
 	}
@@ -30,7 +30,7 @@ int	count_trailing_quotes(char *token)
 	int	len;
 
 	count = 0;
-	len = strlen(token);
+	len = ft_strlen(token);
 	while (len > 0 && token[len - 1] == '\'')
 	{
 		count++;
@@ -52,7 +52,7 @@ void	count_and_find_quotes(char *token, int *start, int *end)
 
 	left_quotes = count_leading_quotes(token);
 	right_quotes = count_trailing_quotes(token);
-	len = strlen(token);
+	len = ft_strlen(token);
 	if (are_quotes_even(left_quotes, right_quotes))
 	{
 		*start = left_quotes;

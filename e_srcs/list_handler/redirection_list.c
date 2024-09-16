@@ -6,64 +6,11 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 15:55:15 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/24 14:25:31 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 00:12:38 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-// int	new_redir(t_redir **redir_list, int *redir_flag, char *name, t_type type)
-// {
-// 	t_redir	*new_redir;
-
-// 	if (*redir_flag == 0)
-// 		*redir_flag = 1;
-// 	new_redir = malloc(sizeof(t_redir));
-// 	if (new_redir == NULL)
-// 		return (perror("malloc"), -1);
-// 	if (name == NULL)
-// 		new_redir->name = NULL;
-// 	else
-// 		new_redir->name = ft_strdup(name);
-// 	if (type == APPEND)
-// 		new_redir->is_append = 1;
-// 	else
-// 		new_redir->is_append = 0;
-// 	new_redir->next = NULL;
-// 	if (*redir_list == NULL)
-// 		*redir_list = new_redir;
-// 	else
-// 		redir_list_add(*redir_list, new_redir);
-// 	return (0);
-// }
-
-// int	redir_list_create(t_type type, t_cmd *cmd, int index)
-// {
-// 	char	*name;
-// 	int		result;
-
-// 	result = 0;
-// 	if (!is_redirection(cmd->args[index + 1]) || cmd->args[index + 1] != NULL)
-// 		name = cmd->args[index + 1];
-// 	else
-// 		name = NULL;
-// 	if (type == HEREDOC)
-// 		result = new_redir(&cmd->input_list, &cmd->is_heredoc, name, HEREDOC);
-// 	else if (type == INPUT)
-// 		result = new_redir(&cmd->input_list, &cmd->is_redir_input, name, INPUT);
-// 	else if (type == APPEND)
-// 		result = new_redir(&cmd->output_list, &cmd->is_redir_output, name, \
-// 							APPEND);
-// 	else if (type == OUTPUT)
-// 		result = new_redir(&cmd->output_list, &cmd->is_redir_output, name, \
-// 							OUTPUT);
-// 	if (result == -1)
-// 		return (-1);
-// 	if (name == NULL)
-// 		return (1);
-// 	else
-// 		return (2);
-// }
 
 int	new_redir_create(t_redir **redir_list, char *name, t_type type)
 {

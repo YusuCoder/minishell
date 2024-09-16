@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:05:44 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/23 20:30:26 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 00:25:31 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	is_accessable(char *cmd_name, char **cmd_path, char **env)
 	{
 		*cmd_path = my_strjoin(path_array[i], "/", cmd_name);
 		if (is_executable(*cmd_path))
-			return (free_array(path_array), 1) ;
+			return (free_array(path_array), 1);
 		free(*cmd_path);
 		i++;
 	}

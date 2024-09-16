@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:33:40 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/24 21:16:51 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:31:14 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int	redir_input_file(t_redir *redir, int *exit_code)
 int	redir_input_heredoc(char *heredoc_input)
 {
 	int	pipe_fd[2];
-
 
 	if (heredoc_input == NULL)
 		return (0);
@@ -69,33 +68,25 @@ int	redir_input_handler(t_redir *input_list, char *heredoc_input, \
 	current = input_list;
 	while (current)
 	{
-		if (current->next == NULL)
+		if (current->type == HEREDOC)
 		{
-			if (current->type == HEREDOC)
-				result = redir_input_heredoc(heredoc_input);
-			else if (current->type == INPUT)
-				result = redir_input_file(current, exit_code);
-			if (result == 0 || result == -1)
-				break ;
-			current = current->next;
+			if (current->next == NULL)
+				return (redir_input_heredoc(heredoc_input));
+			else
+				current = current->next;
 		}
-		else
+		else if (current->type == INPUT)
 		{
-			if (current->type == HEREDOC)
-				current = current->next;
-			else if (current->type == INPUT)
-			{
-				result = redir_input_file(current, exit_code);
-				if (result == 0 || result == -1)
-					break ;
-				current = current->next;
-			}
+			result = redir_input_file(current, exit_code);
+			if (result == 0 || result == -1)
+				return (result);
+			current = current->next;
 		}
 	}
 	return (result);
 }
 
-int	redir_output_handler(t_redir *output_list)
+int	redir_output_handler(t_redir *output_list, int *exit_code)
 {
 	t_redir	*current;
 	int		fd;
@@ -109,8 +100,8 @@ int	redir_output_handler(t_redir *output_list)
 			fd = open(current->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 		{
-			perror("open");
-			return (-1);
+			*exit_code = 1;
+			return (perror("open"), 0);
 		}
 		if (dup2(fd, STDOUT_FILENO) == -1)
 		{
@@ -142,6 +133,6 @@ int	redirection_handler(t_cmd *cmd, int *exit_code)
 			return (result);
 	}
 	if (cmd->is_redir_output && output_list)
-		result = redir_output_handler(output_list);
+		result = redir_output_handler(output_list, exit_code);
 	return (result);
 }

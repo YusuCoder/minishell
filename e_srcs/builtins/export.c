@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ryusupov <ryusupov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:26:13 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:26:15 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 19:23:38 by ryusupov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 // Handle export argument with no value
-int	export_arg_no_value(char *arg, char ***env, int *exit_code)
+int	export_arg_no_value(char *arg, char ***env)
 {
 	char	*name;
 
@@ -23,7 +23,6 @@ int	export_arg_no_value(char *arg, char ***env, int *exit_code)
 		if (export_update_env(env, name, NULL, 0) == -1)
 		{
 			perror("malloc");
-			*exit_code = 1;
 			return (-1);
 		}
 	}
@@ -31,8 +30,7 @@ int	export_arg_no_value(char *arg, char ***env, int *exit_code)
 }
 
 // Handle export argument with value
-int	export_arg_with_value(char *arg, char *equal_sign,
-	char ***env, int *exit_code)
+int	export_arg_with_value(char *arg, char *equal_sign, char ***env)
 {
 	char	*name;
 	char	*value;
@@ -44,14 +42,12 @@ int	export_arg_with_value(char *arg, char *equal_sign,
 		if (export_update_env(env, name, value, 1) != 0)
 		{
 			perror("malloc");
-			*exit_code = 1;
 			return (-1);
 		}
 	}
 	else
 	{
 		perror("malloc");
-		*exit_code = 1;
 		return (-1);
 	}
 	free(name);
@@ -60,7 +56,7 @@ int	export_arg_with_value(char *arg, char *equal_sign,
 }
 
 // Handle export command with arguments
-int	export_with_args(char *arg, char ***env, int *exit_code)
+int	export_with_args(char *arg, char ***env)
 {
 	int		result;
 	char	*equal_sign;
@@ -68,12 +64,11 @@ int	export_with_args(char *arg, char ***env, int *exit_code)
 	result = 0;
 	equal_sign = ft_strchr(arg, '=');
 	if (equal_sign)
-		result = export_arg_with_value(arg, equal_sign, env, exit_code);
+		result = export_arg_with_value(arg, equal_sign, env);
 	else
-		result = export_arg_no_value(arg, env, exit_code);
+		result = export_arg_no_value(arg, env);
 	if (result == -1)
 		return (-1);
-	*exit_code = 0;
 	return (0);
 }
 
@@ -102,7 +97,7 @@ int	export_no_args(char **env, int *exit_code)
 		else
 			printf("declare -x %s\n", sorted_env[i]);
 	}
-	free(sorted_env);
+	free_array(sorted_env);
 	*exit_code = 0;
 	return (0);
 }
@@ -113,20 +108,24 @@ int	execute_export(char **args, char ***env, int *exit_code)
 	int	result;
 	int	i;
 
-	result = 0;
-	i = 1;
-	if (args[i] == NULL)
+	if (array_len(args) == 1)
 		result = export_no_args(*env, exit_code);
-	else
+	*exit_code = 0;
+	i = 1;
+	while (args[i])
 	{
-		while (args[i])
+		if (!is_valid_export_value(args[i]))
+			*exit_code = 1;
+		else
 		{
-			result = export_with_args(args[i], env, exit_code);
+			result = export_with_args(args[i], env);
 			if (result == -1)
+			{
+				*exit_code = 1;
 				return (-1);
-			i++;
+			}
 		}
-		*exit_code = 0;
+		i++;
 	}
-	return (result);
+	return (0);
 }

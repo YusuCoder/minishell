@@ -6,7 +6,7 @@
 /*   By: tkubanyc <tkubanyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 12:18:42 by tkubanyc          #+#    #+#             */
-/*   Updated: 2024/08/16 12:18:44 by tkubanyc         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:15:35 by tkubanyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ char	**env_create_new(void)
 {
 	char	**new_env;
 	char	path_pwd[PATH_MAX];
-	// char	*path_minishell;
 
 	new_env = (char **)malloc((5) * sizeof(char *));
 	if (!new_env)
@@ -25,7 +24,7 @@ char	**env_create_new(void)
 		return (NULL);
 	new_env[0] = ft_strjoin("PWD=", path_pwd);
 	new_env[1] = ft_strdup("SHLVL=1");
-	new_env[2] = ft_strjoin("_=", path_pwd); //<-- !!! Here must be path_minishell !!!
+	new_env[2] = my_strjoin("_=", path_pwd, "/./minishell");
 	new_env[3] = ft_strdup("OLDPWD");
 	new_env[4] = NULL;
 	return (new_env);
