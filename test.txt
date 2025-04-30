@@ -1,0 +1,7 @@
+hello from 42
+kiwi
+banana
+lime
+apple
+watermelon
+ananas

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include "../../includes/linenoise.h"
 
 int	heredoc_save_input(t_cmd *cmd, char *line)
 {
@@ -38,7 +39,7 @@ int	heredoc_readline(t_cmd *cmd, char *delimeter, t_status status, t_data *data)
 	_handle_signals(INIT);
 	while (1)
 	{
-		line = readline("> ");
+		line = linenoise("> ");
 		if (line == NULL)
 			break ;
 		expand_heredoc(&line, data->env, data);

@@ -36,13 +36,14 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <limits.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+// # include <readline/readline.h>
+// # include <readline/history.h>
 # include <sys/wait.h>
 # include <signal.h>
 # include <string.h>
 # include <termios.h>
 # include <sys/stat.h>
+# include "./linenoise.h"
 
 # define PIPE 124
 # define LESS 60

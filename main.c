@@ -11,12 +11,13 @@
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
+#include "./includes/linenoise.h"
 
 char	*read_line(void)
 {
 	char	cwd[PATH_MAX];
 	char	*line;
-	char	prompt[PATH_MAX + 4];
+	char	prompt[4120];
 	char	*last_component;
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
@@ -24,16 +25,19 @@ char	*read_line(void)
 		perror("getcwd");
 		return (NULL);
 	}
-	// printf(CYAN"%s $\n"RESET, cwd);
+
 	last_component = strrchr(cwd, '/');
 	if (last_component == NULL)
 		last_component = cwd;
 	else
 		last_component++;
-	snprintf(prompt, sizeof(prompt), RED"~ %s: 🚀 "RESET, last_component);
-	line = readline(prompt);
+
+	snprintf(prompt, sizeof(prompt), RED "~ %s: 🚀 " RESET, last_component);
+
+	line = linenoise(prompt);
 	if (line && *line != '\0')
-		add_history(line);
+		linenoiseHistoryAdd(line);
+
 	return (line);
 }
 

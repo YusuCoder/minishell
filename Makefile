@@ -27,6 +27,7 @@ SRC_FILES	:= ./p_srcs/signals.c\
 				./p_srcs/quote_handling/quote_handling.c \
 				./p_srcs/quote_handling/d_quote_handler.c \
 				./p_srcs/quote_handling/s_quote_handler.c \
+				./p_srcs/parsing/linenoise.c \
 				./e_srcs/custom_functions/custom_functions.c \
 				./e_srcs/custom_functions/split_str.c \
 				./e_srcs/array/array_handler.c \
