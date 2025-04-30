@@ -34,9 +34,9 @@ char	*read_line(void)
 
 	snprintf(prompt, sizeof(prompt), RED "~ %s: 🚀 " RESET, last_component);
 
-	line = linenoise(prompt);
+	line = readline(prompt);
 	if (line && *line != '\0')
-		linenoiseHistoryAdd(line);
+		read_history(line);
 
 	return (line);
 }

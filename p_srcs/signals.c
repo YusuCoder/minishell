@@ -30,24 +30,24 @@ void	_handle_child_signal(int signal)
 }
 
 // Signal handler for other signals
-// void	_handle_other_signals(int signal)
-// {
-// 	if (signal == SIGINT)
-// 	{
-// 		write(1, "\n", 1);
-// 		rl_replace_line("", 0);
-// 		rl_on_new_line();
-// 		rl_redisplay();
-// 	}
-// }
-
-void _handle_other_signals(int signal)
+void	_handle_other_signals(int signal)
 {
 	if (signal == SIGINT)
 	{
-		write(STDOUT_FILENO, "\n", 1);
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
 }
+
+// void _handle_other_signals(int signal)
+// {
+// 	if (signal == SIGINT)
+// 	{
+// 		write(STDOUT_FILENO, "\n", 1);
+// 	}
+// }
 
 void	_handle_signals(t_process stats)
 {
